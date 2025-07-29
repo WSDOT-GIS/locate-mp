@@ -70,7 +70,7 @@
 	],
 	"author": "Jeff Jacobson",
 	"license": "Unlicense",
-	"packageManager": "pnpm@10.10.0+sha512.d615db246fe70f25dcfea6d8d73dee782ce23e2245e3c4f6f888249fb568149318637dca73c2c5c8ef2a4ca0d5657fb9567188bfab47f566d1ee6ce987815c39",
+	"packageManager": "pnpm@10.14.0-0+sha512.2cd47a0cbf5f1d1de7693a88307a0ede5be94e0d3b34853d800ee775efbea0650cb562b77605ec80bc8d925f5cd27c4dfe8bb04d3a0b76090784c664450d32d6",
 	"pnpm": {
 		"ignoredBuiltDependencies": [
 			"@vaadin/vaadin-usage-statistics",
@@ -79,6 +79,10 @@
 		"onlyBuiltDependencies": [
 			"@biomejs/biome",
 			"esbuild"
-		]
+		],
+		"overrides": {
+			"brace-expansion@>=2.0.0 <=2.0.1": ">=2.0.2",
+			"form-data@>=4.0.0 <4.0.4": ">=4.0.4"
+		}
 	}
 }
