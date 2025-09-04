@@ -114,7 +114,7 @@ export interface XAndY {
  * with numeric values, `false` otherwise.
  */
 export const hasXAndY = <T extends object>(
-	value: T | undefined,
+	value: T | nullish,
 ): value is T & XAndY =>
 	!!value &&
 	(["x", "y"] as (keyof T)[]).every(

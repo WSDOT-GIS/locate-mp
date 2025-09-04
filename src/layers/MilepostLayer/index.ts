@@ -1,13 +1,17 @@
-import Collection from "@arcgis/core/core/Collection";
+
 import type FeatureLayer from "@arcgis/core/layers/FeatureLayer";
 import type Field from "@arcgis/core/layers/support/Field";
-import FieldInfo from "@arcgis/core/popup/FieldInfo";
-import ActionButton from "@arcgis/core/support/actions/ActionButton";
 import type { MilepostExpressionInfo } from "./arcade";
 import {
 	expressions as arcadeExpressions,
 	locationLinksContent,
 } from "./arcade";
+
+const [Collection, FieldInfo, ActionButton] = await $arcgis.import([
+	"@arcgis/core/core/Collection",
+	"@arcgis/core/popup/FieldInfo",
+	"@arcgis/core/support/actions/ActionButton",
+] as const);
 
 export type FieldProperties = Required<ConstructorParameters<typeof Field>>[0];
 
@@ -57,6 +61,9 @@ export function createPopupTemplate(milepostLayer: FeatureLayer) {
 		visibleFieldNames: new Set(),
 	});
 
+	if (!popupTemplate) {
+		throw new TypeError("Expected `popupTemplate` to be defined and non-null.")
+	}
 	const actions = createActionButtons();
 	popupTemplate.actions = actions;
 
@@ -71,7 +78,7 @@ export function createPopupTemplate(milepostLayer: FeatureLayer) {
 		if (["geoURI", "popupTitle"].includes(xi.name)) {
 			fieldInfo.visible = false;
 		}
-		popupTemplate.fieldInfos.push(fieldInfo);
+		popupTemplate.fieldInfos?.push(fieldInfo);
 	}
 	popupTemplate.title = "{expression/popupTitle}";
 

@@ -1,5 +1,6 @@
-import { watch } from "@arcgis/core/core/reactiveUtils";
 import { RouteDescription } from "wsdot-route-utils";
+
+const {watch} = await $arcgis.import("@arcgis/core/core/reactiveUtils");
 
 type RouteLocationAttributes = Record<
 	string,
@@ -110,11 +111,11 @@ export function moveUrlSearchToHash(url: URL | string) {
  * @param view - The map view.
  */
 export function setupMPUrlParamsUpdate(
-	view: __esri.MapView | __esri.SceneView,
+	view: __esri.MapView,
 ) {
 	function updateUrl(visible: boolean): void {
 		// If the popup is not visible, remove the search params from the URL.
-		if (!visible) {
+		if (!visible || !view.popup?.selectedFeature) {
 			const noSearchUrl = window.location.search
 				? window.location.href.replace(window.location.search, "")
 				: window.location.href;
@@ -136,5 +137,5 @@ export function setupMPUrlParamsUpdate(
 			});
 		}
 	}
-	watch(() => view.popup.visible, updateUrl);
+	watch(() => !!view.popup?.visible, updateUrl);
 }

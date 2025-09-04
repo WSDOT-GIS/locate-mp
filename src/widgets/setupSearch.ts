@@ -1,7 +1,10 @@
 import type MapView from "@arcgis/core/views/MapView";
 import type SceneView from "@arcgis/core/views/SceneView";
-import Search from "@arcgis/core/widgets/Search";
-import LocatorSearchSource from "@arcgis/core/widgets/Search/LocatorSearchSource";
+
+const [Search, LocatorSearchSource] = await $arcgis.import([
+	"@arcgis/core/widgets/Search",
+	"@arcgis/core/widgets/Search/LocatorSearchSource",
+] as const);
 
 /**
  * Retrieves the search sources for the application.

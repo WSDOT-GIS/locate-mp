@@ -1,9 +1,11 @@
-import LabelClass from "@arcgis/core/layers/support/LabelClass";
-import { TextSymbol } from "@arcgis/core/symbols";
-import Font from "@arcgis/core/symbols/Font.js";
 import { highwaySignTextColor } from "../../../colors";
 import { routeSegmentLabelExpressionInfo } from "../arcade";
 
+const [ LabelClass, TextSymbol, Font ] = await $arcgis.import([
+	"@arcgis/core/layers/support/LabelClass",
+	"@arcgis/core/symbols/TextSymbol",
+	"@arcgis/core/symbols/Font",
+] as const)
 /**
  * The default font for line segment labels.
  */

@@ -1,16 +1,19 @@
-import Graphic from "@arcgis/core/Graphic";
-import Point from "@arcgis/core/geometry/Point";
 import { describe, test } from "vitest";
 import { findNearestRouteLocations, getRoutes } from "../src/elc";
 import { routeLocationToGraphic } from "../src/elc/arcgis";
 import {
 	type DateString,
 	type FindNearestRouteLocationParameters,
+	isDateString,
 	type RouteGeometryPoint,
 	type RouteLocation,
-	isDateString,
 } from "../src/elc/types";
 import { hasXAndY } from "../src/types";
+
+const [Graphic, Point] = await $arcgis.import([
+	"@arcgis/core/Graphic",
+	"@arcgis/core/geometry/Point",
+] as const);
 
 describe.concurrent(
 	"elc",

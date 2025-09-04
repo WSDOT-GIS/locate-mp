@@ -8,6 +8,11 @@
 	--calcite-color-brand: var(--wsdot-logo-green);
 }
 
+arcgis-map {
+	display: block;
+	height: 100vh;
+}
+
 wsdot-header {
 	display: none;
 }

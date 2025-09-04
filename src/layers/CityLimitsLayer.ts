@@ -1,7 +1,9 @@
-import MapImageLayer from "@arcgis/core/layers/MapImageLayer";
-import SimpleRenderer from "@arcgis/core/renderers/SimpleRenderer";
-import SimpleFillSymbol from "@arcgis/core/symbols/SimpleFillSymbol";
-import SimpleLineSymbol from "@arcgis/core/symbols/SimpleLineSymbol";
+const [ MapImageLayer, SimpleRenderer, SimpleFillSymbol, SimpleLineSymbol ] = await $arcgis.import([
+	"@arcgis/core/layers/MapImageLayer",
+	"@arcgis/core/renderers/SimpleRenderer",
+	"@arcgis/core/symbols/SimpleFillSymbol",
+	"@arcgis/core/symbols/SimpleLineSymbol",
+] as const);
 
 const renderer = new SimpleRenderer({
 	symbol: new SimpleFillSymbol({

@@ -14,6 +14,7 @@
 		"src/wsdot-web-styles/**/*": true
 	},
 	"html.customData": [
+		"./node_modules/@arcgis/map-components/dist/docs/vscode.html-custom-data.json",
 		"./node_modules/@esri/calcite-components/dist/extras/vscode-data.json"
 	],
 	"json.schemas": [

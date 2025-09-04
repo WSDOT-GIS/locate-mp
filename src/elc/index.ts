@@ -15,9 +15,9 @@ import type {
 	RouteGeometryPoint,
 	RouteIdString,
 	RouteLocation,
-	RouteTypes,
 	RoutesResponse,
 	RoutesSet,
+	RouteTypes,
 	ValidRouteLocationForMPInput,
 } from "./types";
 import { populateUrlParameters } from "./url";

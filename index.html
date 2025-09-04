@@ -9,18 +9,21 @@
   <meta name="description"
     content="Locates mileposts along Washington State Routes, as defined by the Washington State Department of Transportation's Linear Referencing System." />
   <meta name="theme-color" content="#007b5f" />
-  <script type="module" src="https://js.arcgis.com/calcite-components/3.1.0/calcite.esm.js"
-    integrity="sha512-HVKtLac7MCpUDxNc1op/8JsdxoHuREHDyNGodETTvcyW1M9T1LA8279Wy2mTclHcV80OBP/49RAThq2sw3pBiA=="
+  <script type="module" src="https://js.arcgis.com/calcite-components/3.2.1/calcite.esm.js"
+    integrity="sha512-GaU7Nv4nYs6VdhrCWqLV7olCWR3fybzbh+0EOyvifVaw/YRwnvezryuElNXoPBXcePtgJ+2BWVcoviMEEQ4zjA=="
     crossorigin="anonymous"></script>
-  <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/3.1.0/calcite.css" />
   <!-- 
     Contitionally load either the light or dark theme depending on user's settings.
     See https://blog.jim-nielsen.com/2019/conditional-syntax-highlighting-in-dark-mode-with-css-imports/
      -->
   <link media="screen and (prefers-color-scheme: light)" rel="stylesheet"
-    href="https://js.arcgis.com/4.32/@arcgis/core/assets/esri/themes/light/main.css" />
+    href="https://js.arcgis.com/4.32/@arcgis/core/assets/esri/themes/light/main.css">
   <link rel="stylesheet" media="screen and (prefers-color-scheme: dark)"
-    href="https://js.arcgis.com/4.32/@arcgis/core/assets/esri/themes/dark/main.css" />
+    href="https://js.arcgis.com/4.32/@arcgis/core/assets/esri/themes/dark/main.css">
+
+  <script src="https://js.arcgis.com/4.32/init.js"></script>
+  <!-- Load map components -->
+  <script type="module" src="https://js.arcgis.com/map-components/4.32/arcgis-map-components.esm.js"></script>
   <title>%VITE_TITLE%</title>
 </head>
 
@@ -32,7 +35,7 @@
     </wsdot-header>
     <calcite-shell-panel slot="panel-start" id="sidebar" resizable>
       <calcite-panel id="route-input-form-panel">
-        <calcite-block loading id="route-input-form-block" heading="Enter State Route & Milepost" collapsible open>
+        <calcite-block loading id="route-input-form-block" heading="Enter State Route & Milepost" collapsible expanded>
           <form id="route-input-form" class="route-input-form">
             <calcite-label for="routeInput">State Route
               <calcite-combobox id="routeInput" name="route" label="route select" selection-mode="single"
@@ -86,7 +89,41 @@
       </calcite-panel>
     </calcite-shell-panel>
 
-    <div id="viewDiv"></div>
+    <!-- <div id="viewDiv"></div> -->
+    <!-- This is the map. It is set to be centered on WA. -->
+    <arcgis-map basemap="hybrid" center="-120.85,47.295" zoom="7">
+
+      <!--
+    Add map components.
+    Small components (e.g., ones that are just single buttons) are placed
+    directly on the map.
+    Ones that are more complex are placed in an "arcgis-expand" component.
+    -->
+
+      <!-- Top-leading -->
+      <arcgis-zoom position="top-leading"> </arcgis-zoom>
+      <arcgis-home position="top-leading"></arcgis-home>
+      <arcgis-locate position="top-leading"></arcgis-locate>
+
+
+      <!-- Top-trailing -->
+      <arcgis-expand position="top-trailing">
+        <arcgis-search></arcgis-search>
+      </arcgis-expand>
+      <arcgis-expand position="top-trailing">
+        <arcgis-layer-list></arcgis-layer-list>
+      </arcgis-expand>
+      <arcgis-expand position="top-trailing">
+        <arcgis-legend />
+      </arcgis-expand>
+      <arcgis-expand position="top-trailing">
+        <arcgis-basemap-gallery></arcgis-basemap-gallery>
+      </arcgis-expand>
+
+      <!-- Bottom-leading -->
+      <arcgis-scale-bar position="bottom-leading" unit="dual"></arcgis-scale-bar>
+
+    </arcgis-map>
     <wsdot-footer slot="footer"></wsdot-footer>
     <calcite-dialog slot="dialogs" id="disclaimer-dialog" modal kind="info" placement="center"
       heading="Disclaimer of warranties and limitations of liabilities"

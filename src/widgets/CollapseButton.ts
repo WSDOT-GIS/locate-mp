@@ -1,5 +1,5 @@
-import { watch } from "@arcgis/core/core/reactiveUtils";
 import type MapView from "@arcgis/core/views/MapView";
+
 
 /**
  * Sets up the sidebar collapse button in the given MapView.
@@ -41,16 +41,22 @@ export function setupSidebarCollapseButton(view: MapView) {
 			: "chevrons-left";
 	};
 
+	// import { watch } from "@arcgis/core/core/reactiveUtils";
+
 	// When the popup is opened, collapse the sidebar if the screen is small.
-	watch(
-		() => view.popup.visible,
-		(visible) => {
-			if (visible && window.outerWidth < threshold) {
-				sideBar.collapsed = true;
-				setSidebarToggleIcon();
-			}
-		},
-	);
+	$arcgis.import("@arcgis/core/core/reactiveUtils").then(({watch}) => {
+		watch(
+			() => view.popup?.visible,
+			(visible) => {
+				if (visible && window.outerWidth < threshold) {
+					sideBar.collapsed = true;
+					setSidebarToggleIcon();
+				}
+			},
+		);
+
+	})
+
 
 	setSidebarToggleIcon();
 }

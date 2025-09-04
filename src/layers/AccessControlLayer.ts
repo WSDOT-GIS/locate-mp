@@ -1,4 +1,4 @@
-import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
+const FeatureLayer = await $arcgis.import("@arcgis/core/layers/FeatureLayer");
 
 type AheadBackIndicator = "A" | "B";
 

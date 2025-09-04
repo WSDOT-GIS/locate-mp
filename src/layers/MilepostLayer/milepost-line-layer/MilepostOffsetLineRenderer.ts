@@ -1,12 +1,21 @@
-import UniqueValueRenderer from "@arcgis/core/renderers/UniqueValueRenderer";
-import { SimpleLineSymbol } from "@arcgis/core/symbols";
-import CIMSymbol from "@arcgis/core/symbols/CIMSymbol";
-import SimpleMarkerSymbol from "@arcgis/core/symbols/SimpleMarkerSymbol";
-import { convertToCIMSymbol } from "@arcgis/core/symbols/support/cimConversionUtils";
 import { highwaySignBackgroundColor } from "../../../colors";
 import { isCimVectorMarker } from "../create-cim";
 import { cimVectorMarker } from "../symbol";
 import { milepostLabelPrimitiveOverride } from "../symbol/primitiveOverrides";
+
+const [
+	UniqueValueRenderer,
+	SimpleLineSymbol,
+	CIMSymbol,
+	SimpleMarkerSymbol,
+	{ convertToCIMSymbol },
+] = await $arcgis.import([
+	"@arcgis/core/renderers/UniqueValueRenderer",
+	"@arcgis/core/symbols/SimpleLineSymbol",
+	"@arcgis/core/symbols/CIMSymbol",
+	"@arcgis/core/symbols/SimpleMarkerSymbol",
+	"@arcgis/core/symbols/support/cimConversionUtils",
+] as const);
 
 function createClickPointSymbolLayer() {
 	const clickPointSymbol = new SimpleMarkerSymbol({

@@ -1,6 +1,7 @@
-import GroupLayer from "@arcgis/core/layers/GroupLayer";
 import { parcelsLayer as regridLayer } from "./regrid";
 import { parcelsLayer as waTechParcelsLayer } from "./watech";
+
+const GroupLayer = await $arcgis.import("@arcgis/core/layers/GroupLayer");
 
 /**
  * Creates a group layer for parcels.
@@ -8,7 +9,7 @@ import { parcelsLayer as waTechParcelsLayer } from "./watech";
  * and its fallback, the Regrid Parcels layer.
  * @returns A group layer containing the WA Tech and Regrid Parcels layers
  */
-export function createParcelsGroupLayer(): GroupLayer {
+export function createParcelsGroupLayer(): InstanceType<typeof GroupLayer> {
 	const groupLayer = new GroupLayer({
 		title: "Parcels",
 		visibilityMode: "exclusive",

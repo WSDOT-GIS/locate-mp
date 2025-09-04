@@ -57,7 +57,7 @@ export function convertArcGisGraphicToGeoJson<
 	const geometry = feature.geometry;
 	const oid = feature.getObjectId();
 
-	const gjGeometry = convertArcGisGeometryToGeoJson(geometry);
+	const gjGeometry = geometry ? convertArcGisGeometryToGeoJson(geometry) : null;
 	return {
 		// Omit OID if it is NaN or is null.
 		// Not sure if typing is correct, so checking for

@@ -1,9 +1,13 @@
-import Color from "@arcgis/core/Color";
-import ClassBreaksRenderer from "@arcgis/core/renderers/ClassBreaksRenderer";
-import ClassBreakInfo from "@arcgis/core/renderers/support/ClassBreakInfo";
-import SimpleFillSymbol from "@arcgis/core/symbols/SimpleFillSymbol";
 import { rangeDomainProperties } from "@wsdot/land-use-codes";
 import { landUseCategoryToColorMapping } from "./colors";
+
+const [Color, ClassBreaksRenderer, ClassBreakInfo, SimpleFillSymbol] =
+	await $arcgis.import([
+		"@arcgis/core/Color",
+		"@arcgis/core/renderers/ClassBreaksRenderer",
+		"@arcgis/core/renderers/support/ClassBreakInfo",
+		"@arcgis/core/symbols/SimpleFillSymbol",
+	] as const);
 
 const defaultSymbol = new SimpleFillSymbol({
 	outline: {
@@ -18,9 +22,12 @@ const createClassBreak = ({
 	name: label,
 	minValue,
 	maxValue,
-}: RangeDomainPropertiesItem): ClassBreakInfo => {
+}: RangeDomainPropertiesItem): __esri.ClassBreakInfo => {
 	const symbol = defaultSymbol.clone();
-	symbol.outline.color = new Color(landUseCategoryToColorMapping.get(label));
+	const colorHex = landUseCategoryToColorMapping.get(label);
+	if (colorHex && symbol.outline) {
+		symbol.outline.color = new Color(colorHex);
+	}
 	return new ClassBreakInfo({ label, minValue, maxValue, symbol });
 };
 const classBreaks = rangeDomainProperties.map(createClassBreak);

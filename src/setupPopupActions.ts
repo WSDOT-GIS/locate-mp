@@ -1,7 +1,8 @@
-import { on } from "@arcgis/core/core/reactiveUtils";
-import type Geometry from "@arcgis/core/geometry/Geometry";
-import Point from "@arcgis/core/geometry/Point";
-import { webMercatorToGeographic } from "@arcgis/core/geometry/support/webMercatorUtils";
+const [Point, {webMercatorToGeographic}, {on}] = await $arcgis.import([
+	"@arcgis/core/geometry/Point",
+	"@arcgis/core/geometry/support/webMercatorUtils",
+	"@arcgis/core/core/reactiveUtils",
+] as const);
 
 /**
  * Creates a calcite-alert element.
@@ -70,7 +71,10 @@ const isMultipoint = (g: __esri.Geometry): g is __esri.Multipoint => {
  * @returns The last point in the input geometry.
  * @throws {TypeError} If the input geometry is not a point, polyline, or polygon.
  */
-const getLastPoint = (g: Geometry): Point => {
+const getLastPoint = (g: __esri.GeometryUnion | nullish) => {
+	if (g == null) {
+		return g;
+	}
 	if (isPoint(g)) {
 		return g;
 	}
@@ -105,9 +109,9 @@ export function setupPopupActions(view: __esri.MapView) {
 	const popupTriggerActionEventHandler: __esri.PopupTriggerActionEventHandler =
 		(event) => {
 			if (event.action.id === "copy") {
-				const feature = view.popup.selectedFeature;
 				try {
-					const lastPoint = getLastPoint(feature.geometry);
+					const feature = view.popup?.selectedFeature;
+					const lastPoint = getLastPoint(feature?.geometry);
 					if (lastPoint) {
 						copyPointToClipboard(lastPoint, { alert, messageElement });
 					}

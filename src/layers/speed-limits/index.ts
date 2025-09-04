@@ -1,6 +1,9 @@
-import LabelClass from "@arcgis/core/layers/support/LabelClass";
-import ClassBreaksRenderer from "@arcgis/core/renderers/ClassBreaksRenderer";
 import data from "./data.json";
+
+const [LabelClass, ClassBreaksRenderer] = await $arcgis.import([
+	"@arcgis/core/layers/support/LabelClass",
+	"@arcgis/core/renderers/ClassBreaksRenderer",
+] as const);
 
 const layerData = data.layers[0];
 

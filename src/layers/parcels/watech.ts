@@ -1,16 +1,16 @@
 const arcGisOnlineId = "569bb6050d634ff7a7f2462378ca974c";
 const parcelIdField = "PARCEL_ID_NR";
 
+const [FeatureLayer, PortalItem, LabelClass] = await $arcgis.import([
+	"@arcgis/core/layers/FeatureLayer",
+	"@arcgis/core/portal/PortalItem",
+	"@arcgis/core/layers/support/LabelClass",
+] as const);
+
 const [
-	{ default: FeatureLayer },
-	{ default: PortalItem },
-	{ default: LabelClass },
 	{ labelSymbol },
 	{ renderer },
 ] = await Promise.all([
-	import("@arcgis/core/layers/FeatureLayer"),
-	import("@arcgis/core/portal/PortalItem"),
-	import("@arcgis/core/layers/support/LabelClass"),
 	import("./label"),
 	import("./renderer"),
 ]);

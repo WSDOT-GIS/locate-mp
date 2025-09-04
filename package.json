@@ -1,15 +1,15 @@
 {
-	"name": "arcgis-mp",
+	"name": "@wsdot/locate-mp",
 	"private": true,
 	"version": "0.0.0",
 	"description": "Milepost map written with ArcGIS Maps API for JavaScript",
 	"type": "module",
 	"scripts": {
-		"prepare": "tsx tools/copy-wsdot-webstyles.ts",
+		"prepare": "bun --bun tools/copy-wsdot-webstyles.ts",
 		"build": "vite build",
 		"watch": "vite build -- --watch",
 		"preview": "vite preview",
-		"build-and-preview": "npm run build && npm run preview -- --open",
+		"build-and-preview": "bun run build && bun run preview -- --open",
 		"clean": "git clean -dfx --exclude \"node_modules/**\" --exclude \".mailmap\" --exclude \".env.local\"",
 		"dev": "vite",
 		"dev-browserstack": "vite --host",
@@ -21,13 +21,15 @@
 	},
 	"dependencies": {
 		"@analytics/google-tag-manager": "^0.6.0",
-		"@arcgis/core": "^4.32.10",
-		"@esri/calcite-components": "3.1.0",
+		"@arcgis/core": "^4.32.8",
+		"@arcgis/map-components": "^4.32.11",
+		"@esri/calcite-components": "^3.2.1",
 		"@fontsource/inconsolata": "^5.2.5",
 		"@fontsource/lato": "^5.2.5",
 		"@fontsource/overpass": "^5.2.5",
 		"@terraformer/arcgis": "^2.1.2",
 		"@types/geojson": "^7946.0.16",
+		"@types/jsdom": "^21.1.7",
 		"@wsdot/land-use-codes": "github:WSDOT-GIS/land-use",
 		"@wsdot/web-styles": "github:WSDOT-GIS/wsdot-web-styles#v1.0.1",
 		"analytics": "^0.8.16",
@@ -36,23 +38,24 @@
 		"wsdot-route-utils": "^3.0.0"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "1.9.4",
+		"@biomejs/biome": "2.2.2",
 		"@types/arcgis-rest-api": "^10.4.8",
 		"@types/browser-update": "^3.3.3",
-		"@types/node": "^22.15.18",
+		"@types/bun": "latest",
+		"@types/node": "^24.3.1",
 		"@types/terraformer__arcgis": "^2.0.5",
 		"@vitest/coverage-istanbul": "^3.1.3",
 		"@vitest/coverage-v8": "^3.1.3",
+		"@wsdot/arcgis-core-helper": "^1.1.2",
 		"browserslist-to-esbuild": "^2.1.1",
 		"cspell": "^9.0.1",
 		"jsdom": "^26.1.0",
 		"msw": "^2.8.2",
 		"optionator": "^0.9.4",
-		"svgo": "^3.3.2",
+		"svgo": "^4.0.0",
 		"svgson": "^5.3.1",
-		"tsx": "^4.19.4",
 		"typescript": "^5.8.3",
-		"vite": "^6.3.5",
+		"vite": "^7.1.4",
 		"vitest": "^3.1.3"
 	},
 	"repository": {
@@ -69,20 +72,5 @@
 		"linear-referencing"
 	],
 	"author": "Jeff Jacobson",
-	"license": "Unlicense",
-	"packageManager": "pnpm@10.14.0-0+sha512.2cd47a0cbf5f1d1de7693a88307a0ede5be94e0d3b34853d800ee775efbea0650cb562b77605ec80bc8d925f5cd27c4dfe8bb04d3a0b76090784c664450d32d6",
-	"pnpm": {
-		"ignoredBuiltDependencies": [
-			"@vaadin/vaadin-usage-statistics",
-			"msw"
-		],
-		"onlyBuiltDependencies": [
-			"@biomejs/biome",
-			"esbuild"
-		],
-		"overrides": {
-			"brace-expansion@>=2.0.0 <=2.0.1": ">=2.0.2",
-			"form-data@>=4.0.0 <4.0.4": ">=4.0.4"
-		}
-	}
+	"license": "Unlicense"
 }

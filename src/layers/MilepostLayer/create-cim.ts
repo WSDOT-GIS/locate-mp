@@ -3,9 +3,12 @@
  * after which it was further modified.
  */
 
-import TextSymbol from "@arcgis/core/symbols/TextSymbol";
-import { convertToCIMSymbol } from "@arcgis/core/symbols/support/cimConversionUtils";
 import { highwaySignBackgroundColor, highwaySignTextColor } from "../../colors";
+
+const [ {convertToCIMSymbol}, TextSymbol ] = await $arcgis.import([
+	"@arcgis/core/symbols/support/cimConversionUtils",
+	"@arcgis/core/symbols/TextSymbol",
+] as const);
 
 /**
  * The name of the text symbol that will have its

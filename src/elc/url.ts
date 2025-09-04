@@ -338,9 +338,9 @@ export async function callElcFromUrl(
 	const graphic = routeLocationToGraphic(location);
 
 	const layer =
-		graphic.geometry.type === "polyline" ? lineMilepostLayer : milepostLayer;
+		graphic.geometry?.type === "polyline" ? lineMilepostLayer : milepostLayer;
 
-	const addedGraphics = addGraphicsToLayer(layer, [graphic]);
+	const addedGraphics = await addGraphicsToLayer(layer, [graphic]);
 
 	return addedGraphics;
 }

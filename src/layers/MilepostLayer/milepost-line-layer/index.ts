@@ -1,12 +1,15 @@
-import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
-import ExpressionInfo from "@arcgis/core/popup/ExpressionInfo";
-import { createPopupTemplate } from "..";
-import waExtent from "../../../WAExtent";
 import { objectIdFieldName } from "../../../elc/types";
+import waExtent from "../../../WAExtent";
+import { createPopupTemplate } from "..";
 import { routeSegmentLabelExpressionInfo } from "../arcade";
 import { segmentFields as fields } from "../fields";
-import MilepostOffsetLineRenderer from "./MilepostOffsetLineRenderer";
 import { lineSegmentLabelClass } from "./label";
+import MilepostOffsetLineRenderer from "./MilepostOffsetLineRenderer";
+
+const [FeatureLayer, ExpressionInfo] = await $arcgis.import([
+	"@arcgis/core/layers/FeatureLayer",
+	"@arcgis/core/popup/ExpressionInfo",
+] as const);
 
 /**
  * Creates a new feature layer that displays mileposts as lines.
@@ -38,7 +41,8 @@ export function createMilepostLineLayer(
 
 	const lineLayer = new FeatureLayer(lineLayerProperties);
 	const popupTemplate = createPopupTemplate(lineLayer);
-	popupTemplate.expressionInfos.push(
+
+	popupTemplate.expressionInfos?.push(
 		new ExpressionInfo({
 			name: "routeSegmentLabel",
 			...routeSegmentLabelExpressionInfo,

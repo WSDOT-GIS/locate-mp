@@ -1,4 +1,4 @@
-import Color from "@arcgis/core/Color";
+const Color = await $arcgis.import("@arcgis/core/Color");
 
 /**
  * The shade of green for the background of highway signs.

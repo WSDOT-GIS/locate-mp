@@ -1,5 +1,6 @@
-import CIMSymbol from "@arcgis/core/symbols/CIMSymbol";
 import { milepostLabelPrimitiveOverride } from "./primitiveOverrides";
+
+const CIMSymbol = await $arcgis.import("@arcgis/core/symbols/CIMSymbol");
 
 const cimCallout: __esri.CIMBackgroundCallout = {
 	type: "CIMBackgroundCallout",

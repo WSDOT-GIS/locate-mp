@@ -1,6 +1,3 @@
-import type { CalciteCheckbox } from "@esri/calcite-components/dist/components/calcite-checkbox";
-import type { CalciteCombobox } from "@esri/calcite-components/dist/components/calcite-combobox";
-import type { CalciteInputNumber } from "@esri/calcite-components/dist/components/calcite-input-number";
 import { RouteDescription } from "wsdot-route-utils";
 import replaceTitleWithTooltip from "../../replace-title-with-tooltip";
 import {
@@ -65,19 +62,19 @@ export interface SrmpInputForm extends HTMLFormElement {
 	/**
 	 * The route input field.
 	 */
-	route: CalciteCombobox;
+	route: HTMLCalciteComboboxElement;
 	/**
 	 * The milepost input field.
 	 */
-	mp: CalciteInputNumber;
+	mp: HTMLCalciteInputNumberElement;
 	/**
 	 * The back checkbox.
 	 */
-	back: CalciteCheckbox;
+	back: HTMLCalciteCheckboxElement;
 	/**
 	 * The decrease checkbox.
 	 */
-	decrease: CalciteCheckbox;
+	decrease: HTMLCalciteCheckboxElement;
 
 	/*
   addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLOutputElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
@@ -118,7 +115,7 @@ export async function createSrmpInputForm() {
 		throw new TypeError("Form does not implement SrmpInputForm interface");
 	}
 
-	const routeElement = form.querySelector("#routeInput");
+	const routeElement = form.querySelector<HTMLCalciteComboboxElement>("#routeInput");
 	if (!routeElement) {
 		throw new Error("route element not found");
 	}
@@ -130,9 +127,9 @@ export async function createSrmpInputForm() {
 		form.dispatchEvent(new CustomEvent("srmp-input"));
 	});
 
-	routeElement.addEventListener("change", (event: Event) => {
+	routeElement.addEventListener("calciteComboboxChange", (event) => {
 		const selectedItems = (
-			event.target as InstanceType<typeof CalciteCombobox> | null
+			event.target
 		)?.selectedItems;
 
 		if (selectedItems && selectedItems.length > 0) {

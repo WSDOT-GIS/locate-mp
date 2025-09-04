@@ -12,8 +12,11 @@
  * > distinct from the map hash. ...
  */
 
-import { webMercatorToGeographic } from "@arcgis/core/geometry/support/webMercatorUtils";
 import FormatError from "../common/FormatError";
+
+const { webMercatorToGeographic } = await import(
+	"@arcgis/core/geometry/support/webMercatorUtils"
+);
 
 // TODO: Make sure the hash is using WGS84 coordinates instead of Web Mercator.
 

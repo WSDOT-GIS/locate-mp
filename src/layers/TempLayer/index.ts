@@ -1,20 +1,14 @@
 import { objectIdFieldName } from "../../elc/types";
 
-const [
-	{ default: Collection },
-	{ default: SpatialReference },
-	{ default: FeatureLayer },
-	{ default: Field },
-	{ default: SimpleRenderer },
-	{ loadingSymbol },
-] = await Promise.all([
-	import("@arcgis/core/core/Collection"),
-	import("@arcgis/core/geometry/SpatialReference"),
-	import("@arcgis/core/layers/FeatureLayer"),
-	import("@arcgis/core/layers/support/Field"),
-	import("@arcgis/core/renderers/SimpleRenderer"),
-	import("./loadingSymbol"),
-]);
+const [Collection, SpatialReference, FeatureLayer, Field, SimpleRenderer] =
+	await $arcgis.import([
+		"@arcgis/core/core/Collection",
+		"@arcgis/core/geometry/SpatialReference",
+		"@arcgis/core/layers/FeatureLayer",
+		"@arcgis/core/layers/support/Field",
+		"@arcgis/core/renderers/SimpleRenderer",
+	] as const);
+const { loadingSymbol } = await import("./loadingSymbol");
 
 /**
  * This layer is used for showing the user where the clicked

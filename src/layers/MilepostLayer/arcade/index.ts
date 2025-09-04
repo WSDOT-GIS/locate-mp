@@ -1,7 +1,3 @@
-import type LabelClass from "@arcgis/core/layers/support/LabelClass";
-import ExpressionInfo from "@arcgis/core/popup/ExpressionInfo";
-import ExpressionContent from "@arcgis/core/popup/content/ExpressionContent";
-import { isInternal } from "../../../urls/isIntranet";
 import AccessControlArcade from "./Access Control.arcade?raw";
 import CityArcade from "./City.arcade?raw";
 import CountyArcade from "./County.arcade?raw";
@@ -9,12 +5,17 @@ import lastCoordinateArcade from "./Last Coordinate.arcade?raw";
 import LocateMPUrlArcade from "./LocateMP URL.arcade?raw";
 import LocationLinksArcade from "./Location Links.arcade?raw";
 import MilepostLabelArcade from "./Milepost Label.arcade?raw";
+import PopupTitle from "./Popup Title.arcade?raw";
+import splitRouteIdFunction from "./parts/splitRouteId.function.arcade?raw";
 import RegionArcade from "./Region.arcade?raw";
 import routeSegmentLabelArcade from "./Route Segment Label.arcade?raw";
 import SRViewURLArcade from "./SRView URL.arcade?raw";
 import TownshipSectionArcade from "./Township Section.arcade?raw";
-import splitRouteIdFunction from "./parts/splitRouteId.function.arcade?raw";
-import PopupTitle from "./Popup Title.arcade?raw";
+
+const [ExpressionInfo, ExpressionContent] = await $arcgis.import([
+	"@arcgis/core/popup/ExpressionInfo",
+	"@arcgis/core/popup/content/ExpressionContent",
+] as const);
 
 export const locationLinksContent = new ExpressionContent({
 	expressionInfo: {
@@ -23,7 +24,7 @@ export const locationLinksContent = new ExpressionContent({
 	},
 });
 
-export const routeSegmentLabelExpressionInfo: LabelClass["labelExpressionInfo"] =
+export const routeSegmentLabelExpressionInfo =
 	{
 		title: "Route Segment Label",
 		expression: routeSegmentLabelArcade,
@@ -109,7 +110,7 @@ const expressionInfoProperties = [
 		title: "Popup Title",
 		expression: PopupTitle,
 		returnType: "string",
-	}
+	},
 ] as const; // When editing, temporarily set type to __esri.ExpressionInfoProperties[]
 
 export type expressionNames = (typeof expressionInfoProperties)[number]["name"];
@@ -139,19 +140,21 @@ export const routeSegmentExpressions = [
 	...expressions,
 ];
 
-/**
- * Removes the SR View URL expression.
- */
-const removeSrView = () => {
-	const x = expressions.find((expression) => expression.name === "srViewURL");
-	if (x) {
-		expressions.splice(expressions.indexOf(x), 1);
+if (!import.meta.env.DEV) {
+	/**
+	 * Removes the SR View URL expression.
+	 */
+	const removeSrView = () => {
+		const x = expressions.find((expression) => expression.name === "srViewURL");
+		if (x) {
+			expressions.splice(expressions.indexOf(x), 1);
+		}
+	};
+	const { canAccessIntranet } = await import("../../../urls/isIntranet");
+	// Remove the SR View URL expression if we are not on the intranet.
+	if (!canAccessIntranet()) {
+		removeSrView();
 	}
-};
-
-// Remove the SR View URL expression if we are not on the intranet.
-if (!isInternal()) {
-	removeSrView();
 }
 
 export default expressions;

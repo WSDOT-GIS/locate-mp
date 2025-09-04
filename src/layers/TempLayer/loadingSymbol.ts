@@ -1,4 +1,7 @@
-import { SimpleLineSymbol, SimpleMarkerSymbol } from "@arcgis/core/symbols";
+const [ SimpleMarkerSymbol, SimpleLineSymbol ] = await $arcgis.import([
+	"@arcgis/core/symbols/SimpleMarkerSymbol",
+	"@arcgis/core/symbols/SimpleLineSymbol",
+] as const);
 
 export const loadingSymbol = new SimpleMarkerSymbol({
 	color: "red",

@@ -1,4 +1,5 @@
-import Color from "@arcgis/core/Color.js";
+const Color = await $arcgis.import("@arcgis/core/Color.js");
+
 import { describe, test } from "vitest";
 import {
 	highwaySignBackgroundColor,

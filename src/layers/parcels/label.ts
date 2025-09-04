@@ -1,4 +1,4 @@
-import TextSymbol from "@arcgis/core/symbols/TextSymbol";
+const TextSymbol = await $arcgis.import("@arcgis/core/symbols/TextSymbol");
 
 const outlineColor = "white";
 

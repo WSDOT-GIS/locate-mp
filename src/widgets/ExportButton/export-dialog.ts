@@ -2,24 +2,6 @@ import type FeatureLayer from "@arcgis/core/layers/FeatureLayer.js";
 import type { CalciteDialogCustomEvent } from "@esri/calcite-components";
 
 /**
- * JSON reviver function that converts empty strings to `null`.
- * @this - The context for the function, unused in this implementation.
- * @param _key - The key of the current value being processed, unused in this implementation.
- * @param value - The current value being processed.
- * @returns The processed value, with empty strings converted to `null`.
- */
-const reviver: Parameters<typeof JSON.parse>[1] = function (
-	this,
-	_key: string,
-	value: unknown,
-) {
-	if (typeof value === "string" && !value.trim()) {
-		return null;
-	}
-	return value;
-};
-
-/**
  * Generator function that yields a list of {@link HTMLLIElement} elements for each
  * provided layer. Each element contains a link element with a download attribute set
  * to a filename that includes the layer's title and the current date and time.
@@ -38,7 +20,7 @@ function* queryLayers(layers: Iterable<FeatureLayer>) {
 	 * @param listItem - An {@link HTMLLIElement} element that will be populated with the links.
 	 */
 	async function executeQuery(layer: FeatureLayer, listItem: HTMLLIElement) {
-		const { default: SpatialReference } = await import(
+		const SpatialReference = await $arcgis.import(
 			"@arcgis/core/geometry/SpatialReference"
 		);
 		const { arcgisToGeoJSON } = await import("@terraformer/arcgis");

@@ -1,11 +1,14 @@
 import type SpatialReference from "@arcgis/core/geometry/SpatialReference";
-import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
-import SimpleRenderer from "@arcgis/core/renderers/SimpleRenderer";
-import { createPopupTemplate } from "..";
-import waExtent from "../../../WAExtent";
 import { objectIdFieldName } from "../../../elc/types";
+import waExtent from "../../../WAExtent";
+import { createPopupTemplate } from "..";
 import { fields } from "../fields";
 import { milepostSymbol } from "../symbol";
+
+const [FeatureLayer, SimpleRenderer] = await $arcgis.import([
+	"@arcgis/core/layers/FeatureLayer",
+	"@arcgis/core/renderers/SimpleRenderer",
+] as const);
 
 /**
  * Creates the {@link FeatureLayer} that displays located mileposts.
