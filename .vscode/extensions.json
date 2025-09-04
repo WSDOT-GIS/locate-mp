@@ -13,6 +13,7 @@
 		"bierner.jsdoc-markdown-highlighting",
 		"ms-azure-devops.azure-pipelines",
 		"biomejs.biome",
-		"esri.arcgis-maps-sdk-js-snippets"
+		"esri.arcgis-maps-sdk-js-snippets",
+		"oven.bun-vscode"
 	]
 }
