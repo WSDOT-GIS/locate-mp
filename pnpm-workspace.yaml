@@ -1,4 +1,0 @@
-gitBranchLockfile: true
-mergeGitBranchLockfilesBranchPattern:
-- master
-- release*
