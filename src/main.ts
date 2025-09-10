@@ -1,27 +1,27 @@
-import { createParcelsGroupLayer } from "./layers/parcels";
+import type MapView from "@arcgis/core/views/MapView";
 import "@fontsource/inconsolata";
 import "@fontsource/lato";
 import "@wsdot/web-styles/css/wsdot-colors.css";
 import type { AnalyticsInstance } from "analytics";
+import { addGraphicsToLayer } from "./addGraphicsToLayer";
 import { createErrorAlert } from "./createElcErrorAlert";
-import type MapView from "@arcgis/core/views/MapView";
+import { findNearestRouteLocations } from "./elc";
+import { routeLocationToGraphic } from "./elc/arcgis";
+import { callElcFromUrl } from "./elc/url";
+import { emitErrorEvent } from "./errorEvent";
+import type { HostEnvironment } from "./getHostEnvironment";
 import {
 	setupMPUrlParamsUpdate,
 	updateUrlSearchParams,
 } from "./history-api/url-search";
-import { findNearestRouteLocations } from "./elc";
-import { addGraphicsToLayer } from "./addGraphicsToLayer";
-import { routeLocationToGraphic } from "./elc/arcgis";
-import { callElcFromUrl } from "./elc/url";
-import { emitErrorEvent } from "./errorEvent";
+import { setupInterceptors } from "./interceptors";
 import { createMilepostLineLayer } from "./layers/MilepostLayer/milepost-line-layer";
 import { createMilepostPointLayer } from "./layers/MilepostLayer/milepost-point-layer";
+import { createParcelsGroupLayer } from "./layers/parcels";
 import { tempLayer } from "./layers/TempLayer";
-import { hasXAndY, UIAddPositions, isGraphicHit } from "./types";
+import { hasXAndY, isGraphicHit, UIAddPositions } from "./types";
 import waExtent from "./WAExtent";
 import { setupSidebarCollapseButton } from "./widgets/CollapseButton";
-import { setupInterceptors } from "./interceptors";
-import type { HostEnvironment } from "./getHostEnvironment";
 
 import("./urls/isIntranet.ts");
 

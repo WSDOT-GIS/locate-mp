@@ -3,7 +3,7 @@
  * See: https://developers.arcgis.com/calcite-design-system/get-started/#load-the-assets
  */
 import type { Dirent } from "node:fs";
-import { cp, mkdir, readFile, readdir, writeFile } from "node:fs/promises";
+import { cp, mkdir, readdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { parse as parseSvg } from "svgson";

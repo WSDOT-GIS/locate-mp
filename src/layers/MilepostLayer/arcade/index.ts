@@ -135,6 +135,9 @@ export const expressions = expressionInfoProperties.map(
 	(info) => new ExpressionInfo(info) as MilepostExpressionInfo,
 );
 
+/**
+ * An array of label expressions.
+ */
 export const routeSegmentExpressions = [
 	{ name: "routeSegmentLabel", ...routeSegmentLabelExpressionInfo },
 	...expressions,

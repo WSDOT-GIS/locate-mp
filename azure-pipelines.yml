@@ -20,7 +20,7 @@ trigger:
 # The pool section specifies the agent pool that will run the jobs in this pipeline.
 # 'Default' is typically the name of the Microsoft-hosted agent pool provided by Azure DevOps.
 pool:
-  name: Default
+  name: Default-Modern
 
 # The stages section allows you to organize the pipeline into multiple stages.
 # Here we have only one stage named 'build', which contains the jobs for building the project.
@@ -38,48 +38,39 @@ stages:
             name: use_node
             displayName: Install Node
             inputs:
-              version: 22.X
+              version: 24.X
 
-          - task: Cache@2
-            enabled: false
+          - task: Npm@1
+            name: setup_bun
+            displayName: setup bun
             inputs:
-              key: 'pnpm | "$(Agent.OS)" | pnpm-lock.yaml'
-              path: $(pnpm_config_cache)
-            displayName: Cache pnpm
+              command: 'custom'
+              customCommand: 'install -g bun'
+              verbose: true
 
-
+          # Install dependencies
           - script: |
-              corepack enable
-            displayName: "Setup pnpm"
-
-
-          # - script: |
-          #     corepack enable
-          #     corepack prepare pnpm@latest-9 --activate
-          #     pnpm config set store-dir $(pnpm_config_cache)
-          #   displayName: "Setup pnpm"
-
-          - script: |
-              pnpm install
+              bun ci
             name: install
-            displayName: "pnpm install --frozen-lockfile --reporter append-only"
+            displayName: "bun install"
 
+          # Install dependencies and build the project
           - script: |
-              pnpm test
-            name: pnpm_test
-            displayName: "pnpm test"
-
-          - script: |
-              pnpm run build
+              bun run build-and-tsc
             name: build
-            displayName: "pnpm build"
+            displayName: "Build"
+
+          - script: |
+              bun run test
+            name: test
+            displayName: "Unit Test"
 
           # Count the number of files in the 'dist' folder
           # to make sure there are actually files there.
           # This script will return a non-zero exit code
           # if there are no files.
           - script: |
-              node tools/count-files.js
+              bun -b tools/count-files.js
             name: count_files
             displayName: "Count files"
 

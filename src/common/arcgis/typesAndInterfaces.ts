@@ -1,8 +1,8 @@
 import type {
+	esriGeometryType,
 	Feature,
 	Field,
 	SpatialReference,
-	esriGeometryType,
 } from "arcgis-rest-api";
 
 export type AttributeValue = string | number | boolean | null;

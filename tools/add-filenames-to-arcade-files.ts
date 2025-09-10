@@ -1,6 +1,10 @@
+/**
+ * Adds the filename as a comment to each Arcade file. This is because the
+ * filenames are used as part of the label for the expression in the ArcGIS
+ * Maps SDK for JavaScript.
+ */
 import type { Dirent } from "node:fs";
-import { readdir } from "node:fs/promises";
-import { readFile, writeFile } from "node:fs/promises";
+import { readdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 
 const thisDir = import.meta.dirname;
