@@ -50,7 +50,7 @@
 		"@wsdot/arcgis-core-helper": "^1.1.2",
 		"browserslist-to-esbuild": "^2.1.1",
 		"cspell": "^9.0.1",
-		"jsdom": "^26.1.0",
+		"jsdom": "^27.0.0",
 		"msw": "^2.11.2",
 		"optionator": "^0.9.4",
 		"svgo": "^4.0.0",
