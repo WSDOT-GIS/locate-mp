@@ -22,7 +22,7 @@ export function createMilepostPointLayer(spatialReference: SpatialReference) {
 	const milepostLayer = new FeatureLayer({
 		title: "Mileposts",
 		id: "mileposts",
-		listMode: "hide",
+		listMode: import.meta.env.DEV ? "show" : "hide",
 		fields: fields,
 		geometryType: "point",
 		objectIdField: objectIdFieldName,
@@ -33,6 +33,7 @@ export function createMilepostPointLayer(spatialReference: SpatialReference) {
 		source: [],
 		popupEnabled: true,
 		hasM: true,
+		visible: true
 	});
 
 	milepostLayer.renderer = createRenderer();

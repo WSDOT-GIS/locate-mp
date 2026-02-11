@@ -1,3 +1,12 @@
+import type { ActionEvent } from "@arcgis/core/widgets/Popup/types";
+import type MapView from "@arcgis/core/views/MapView";
+import type { GeometryUnion } from "@arcgis/core/geometry/types";
+import type Multipoint from "@arcgis/core/geometry/Multipoint";
+import type Geometry from "@arcgis/core/geometry/Geometry";
+import type Polygon from "@arcgis/core/geometry/Polygon";
+import type Polyline from "@arcgis/core/geometry/Polyline";
+import type geometryPoint from "@arcgis/core/geometry/Point";
+
 const [Point, {webMercatorToGeographic}, {on}] = await $arcgis.import([
 	"@arcgis/core/geometry/Point",
 	"@arcgis/core/geometry/support/webMercatorUtils",
@@ -26,13 +35,13 @@ function createCalciteAlert() {
 }
 
 const copyPointToClipboard = (
-	point: __esri.Point,
+	point: geometryPoint,
 	{ messageElement, alert }: ReturnType<typeof createCalciteAlert>,
 ) => {
 	let projectedPoint = point;
 	const { spatialReference } = point;
 	if (spatialReference.isWebMercator) {
-		projectedPoint = webMercatorToGeographic(point) as __esri.Point;
+		projectedPoint = webMercatorToGeographic(point) as geometryPoint;
 	} else if (!spatialReference.isWGS84) {
 		throw new Error(`Unsupported spatial reference: ${spatialReference.wkid}`);
 	}
@@ -50,18 +59,18 @@ const copyPointToClipboard = (
 		});
 };
 
-const isPoint = (g: __esri.Geometry): g is __esri.Point => {
+const isPoint = (g: Geometry): g is geometryPoint => {
 	return g.type === "point";
 };
-const isPolyline = (g: __esri.Geometry): g is __esri.Polyline => {
+const isPolyline = (g: Geometry): g is Polyline => {
 	return g.type === "polyline";
 };
 
-const isPolygon = (g: __esri.Geometry): g is __esri.Polygon => {
+const isPolygon = (g: Geometry): g is Polygon => {
 	return g.type === "polygon";
 };
 
-const isMultipoint = (g: __esri.Geometry): g is __esri.Multipoint => {
+const isMultipoint = (g: Geometry): g is Multipoint => {
 	return g.type === "multipoint";
 };
 
@@ -71,7 +80,7 @@ const isMultipoint = (g: __esri.Geometry): g is __esri.Multipoint => {
  * @returns The last point in the input geometry.
  * @throws {TypeError} If the input geometry is not a point, polyline, or polygon.
  */
-const getLastPoint = (g: __esri.GeometryUnion | nullish) => {
+const getLastPoint = (g: GeometryUnion | null | undefined) => {
 	if (g == null) {
 		return g;
 	}
@@ -102,11 +111,11 @@ const getLastPoint = (g: __esri.GeometryUnion | nullish) => {
  * Sets up popup actions for the given map view.
  * @param view - The map view to set up popup actions for.
  */
-export function setupPopupActions(view: __esri.MapView) {
+export function setupPopupActions(view: MapView) {
 	const { alert, messageElement } = createCalciteAlert();
 	document.body.append(alert);
 
-	const popupTriggerActionEventHandler: __esri.PopupTriggerActionEventHandler =
+	const popupTriggerActionEventHandler: ((event: ActionEvent) => void) =
 		(event) => {
 			if (event.action.id === "copy") {
 				try {

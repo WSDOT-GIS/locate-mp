@@ -1,8 +1,9 @@
 import { milepostLabelPrimitiveOverride } from "./primitiveOverrides";
+import type { CIMPointSymbol, CIMVectorMarker, CIMMarkerGraphic, CIMTextSymbol, CIMBackgroundCallout } from "@arcgis/core/symbols/cim/types";
 
 const CIMSymbol = await $arcgis.import("@arcgis/core/symbols/CIMSymbol");
 
-const cimCallout: __esri.CIMBackgroundCallout = {
+const cimCallout: CIMBackgroundCallout = {
 	type: "CIMBackgroundCallout",
 	backgroundSymbol: {
 		type: "CIMPolygonSymbol",
@@ -21,7 +22,7 @@ const cimCallout: __esri.CIMBackgroundCallout = {
 		],
 	},
 };
-const cimTextSymbol: __esri.CIMTextSymbol = {
+const cimTextSymbol: CIMTextSymbol = {
 	type: "CIMTextSymbol",
 	angle: 0,
 	fontFamilyName: "Noto Sans",
@@ -48,7 +49,7 @@ const cimTextSymbol: __esri.CIMTextSymbol = {
 	verticalAlignment: "Baseline",
 	callout: cimCallout,
 };
-const cimMarkerGraphic: __esri.CIMMarkerGraphic = {
+const cimMarkerGraphic: CIMMarkerGraphic = {
 	type: "CIMMarkerGraphic",
 	geometry: { x: 0, y: 0 },
 	primitiveName: "milepostLabel",
@@ -56,13 +57,13 @@ const cimMarkerGraphic: __esri.CIMMarkerGraphic = {
 	textString: " ",
 };
 
-const segmentEndpointCimMarkerGraphic: __esri.CIMMarkerGraphic = {
+const segmentEndpointCimMarkerGraphic: CIMMarkerGraphic = {
 	...cimMarkerGraphic,
 	primitiveName: "endMilepostLabel",
 	textString: " ",
 };
 
-export const cimVectorMarker: __esri.CIMVectorMarker = {
+export const cimVectorMarker: CIMVectorMarker = {
 	type: "CIMVectorMarker",
 	enable: true,
 	anchorPointUnits: "Relative",
@@ -73,7 +74,7 @@ export const cimVectorMarker: __esri.CIMVectorMarker = {
 	respectFrame: true,
 };
 
-export const segmentStartpointCimVectorMarker: __esri.CIMVectorMarker = {
+export const segmentStartpointCimVectorMarker: CIMVectorMarker = {
 	...cimVectorMarker,
 	markerGraphics: [cimMarkerGraphic],
 	markerPlacement: {
@@ -82,7 +83,7 @@ export const segmentStartpointCimVectorMarker: __esri.CIMVectorMarker = {
 	},
 };
 
-export const segmentEndpointCimVectorMarker: __esri.CIMVectorMarker = {
+export const segmentEndpointCimVectorMarker: CIMVectorMarker = {
 	...cimVectorMarker,
 	markerGraphics: [segmentEndpointCimMarkerGraphic],
 	markerPlacement: {
@@ -91,7 +92,7 @@ export const segmentEndpointCimVectorMarker: __esri.CIMVectorMarker = {
 	},
 };
 
-const cimPointSymbol: __esri.CIMPointSymbol = {
+const cimPointSymbol: CIMPointSymbol = {
 	type: "CIMPointSymbol",
 	symbolLayers: [cimVectorMarker],
 	scaleX: 1,

@@ -73,8 +73,8 @@ for (var f in fs) {
 }
 
 if (shortestDistanceCode == null) {
-  return null;
+   null;
 } else {
   var output = `${shortestDistanceCode} (as of ${Text(shortestDistanceSnapshotDate, "Y-MM-DD")})`;
-  return output
+   output
 }

@@ -16,21 +16,7 @@ export interface ClearButtonOptions {
  * @returns A button that will clear the specified graphics when cleared.
  */
 export function createClearButton(options: ClearButtonOptions) {
-	const button = document.createElement("button");
-	button.title = "Clear all graphics";
-	button.ariaLabel = "Clear";
-	button.role = "button";
-	button.classList.add(
-		"esri-widget",
-		"esri-widget--button",
-		"esri-component",
-		"locate-mp-clear-button",
-	);
-
-	const iconSpan = document.createElement("span");
-	iconSpan.ariaHidden = "true";
-	iconSpan.classList.add("esri-icon", "esri-icon-erase");
-	button.append(iconSpan);
+	const button = document.querySelector<HTMLCalciteButtonElement>("clear-button");
 
 	const { layers } = options;
 
@@ -53,6 +39,6 @@ export function createClearButton(options: ClearButtonOptions) {
 		}
 	}
 
-	button.addEventListener("click", clearFeatures);
+	button?.addEventListener("click", clearFeatures);
 	return button;
 }

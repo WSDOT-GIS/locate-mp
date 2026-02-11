@@ -5,6 +5,7 @@ import { routeSegmentLabelExpressionInfo } from "../arcade";
 import { segmentFields as fields } from "../fields";
 import { lineSegmentLabelClass } from "./label";
 import MilepostOffsetLineRenderer from "./MilepostOffsetLineRenderer";
+import type { FeatureLayerProperties } from "@arcgis/core/layers/FeatureLayer";
 
 const [FeatureLayer, ExpressionInfo] = await $arcgis.import([
 	"@arcgis/core/layers/FeatureLayer",
@@ -21,13 +22,13 @@ export function createMilepostLineLayer(
 ) {
 	// Make a clone of the milepost point layer, as most of the properties
 	// will be the same aside from the geometry type and renderer.
-	const lineLayerProperties: __esri.FeatureLayerProperties = {
+	const lineLayerProperties: FeatureLayerProperties = {
 		geometryType: "polyline",
 		title: "Near Mileposts",
 		fields,
 		objectIdField: objectIdFieldName,
 		id: "nearMileposts",
-		listMode: "hide",
+		listMode: import.meta.env.DEV ? "show" : "hide",
 		fullExtent: waExtent,
 		spatialReference,
 		// Since there are no features at the beginning,
@@ -36,6 +37,7 @@ export function createMilepostLineLayer(
 		source: [],
 		popupEnabled: true,
 		hasM: true,
+		visible: true,
 		labelingInfo: [lineSegmentLabelClass],
 	};
 

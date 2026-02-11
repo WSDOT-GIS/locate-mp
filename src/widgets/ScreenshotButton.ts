@@ -39,6 +39,10 @@ function createControls(view: MapView) {
 	};
 }
 
+type TakeScreenshotOptions = NonNullable<
+	Parameters<InstanceType<typeof MapView>["takeScreenshot"]>[0]
+>;
+
 /**
  * Creates and displays a dialog containing a screenshot of the current map view.
  * The dialog is removed from the DOM when closed.
@@ -65,9 +69,9 @@ const createDialog = (view: MapView) => {
 	 * @param options - Options for taking the screenshot, see {@link https://developers.arcgis.com/javascript/latest/api-reference/esri-views-MapView.html#takeScreenshot | MapView.takeScreenshot}
 	 */
 	async function updateScreenshot(
-		options: Pick<__esri.MapViewTakeScreenshotOptions, "width" | "height">,
+		options: Pick<TakeScreenshotOptions, "width" | "height">,
 	) {
-		const screenshotOptions: __esri.MapViewTakeScreenshotOptions = {
+		const screenshotOptions: TakeScreenshotOptions = {
 			format: "png",
 			ignoreBackground: true,
 			width: options.width ?? view.width,
@@ -88,8 +92,8 @@ const createDialog = (view: MapView) => {
 	 */
 	function updateScreenshotListener(this: HTMLInputElement, _ev: Event) {
 		updateScreenshot({
-			width: Number.parseInt(widthBox.value),
-			height: Number.parseInt(heightBox.value),
+			width: Number.parseInt(widthBox.value, 10),
+			height: Number.parseInt(heightBox.value, 10),
 		});
 	}
 
@@ -118,14 +122,13 @@ const createDialog = (view: MapView) => {
 export async function setupScreenshotButton(mapView: MapView) {
 	await mapView.when();
 
-	const screenshotButton = document.createElement("calcite-button");
-	screenshotButton.id = "screenshotButton";
-	screenshotButton.iconStart = "camera";
-	screenshotButton.title = "Take Screenshot";
+	const screenshotButton = document.querySelector<HTMLCalciteButtonElement>(
+		"calcite-button#screenshot-button",
+	);
+	if (!screenshotButton) {
+		throw new TypeError("Screenshot button not found")
+	}
 
-	mapView.ui.add(screenshotButton, {
-		position: "top-left",
-	});
 
 	const buttonEventListener: NonNullable<
 		typeof screenshotButton.onclick

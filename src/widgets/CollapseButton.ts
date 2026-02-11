@@ -16,10 +16,14 @@ export function setupSidebarCollapseButton(view: MapView) {
 	}
 
 	// <calcite-button id="toggleSidebarButton" text="Toggle Sidebar" icon="collapse"></calcite-button>
-	const collapseButton = document.createElement("calcite-button");
-	collapseButton.setAttribute("id", "toggleSidebarButton");
-	collapseButton.setAttribute("text", "Toggle Sidebar");
-	collapseButton.setAttribute("icon", "collapse");
+	const collapseButton = document.querySelector<HTMLCalciteButtonElement>("calcite-button#toggleSidebarButton")
+	if (!collapseButton) {
+		throw new TypeError("Failed to find collapse button element")
+	}
+	// const collapseButton = document.createElement("calcite-button");
+	// collapseButton.setAttribute("id", "toggleSidebarButton");
+	// collapseButton.setAttribute("text", "Toggle Sidebar");
+	// collapseButton.setAttribute("icon", "collapse");
 	collapseButton.addEventListener("click", () => {
 		sideBar.collapsed = !sideBar.collapsed;
 		setSidebarToggleIcon();
@@ -32,9 +36,6 @@ export function setupSidebarCollapseButton(view: MapView) {
 	if (window.outerWidth >= threshold) {
 		sideBar.collapsed = false;
 	}
-
-	view.ui.add(collapseButton, "top-leading");
-
 	const setSidebarToggleIcon = () => {
 		collapseButton.iconStart = sideBar.collapsed
 			? "chevrons-right"

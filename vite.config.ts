@@ -1,6 +1,6 @@
 /// <reference types="vite/client" />
 /// <reference types="vitest" />
-import browserslistToEsbuild from "browserslist-to-esbuild";
+
 import { defineConfig } from "vite";
 
 export default defineConfig((env) => ({
@@ -10,8 +10,6 @@ export default defineConfig((env) => ({
 		extensions: [".ts", ".js", ".css", ".json"],
 	},
 	build: {
-		// This sets the target based on the `browserslist` file.
-		target: browserslistToEsbuild(),
 		rollupOptions: {
 			input: {
 				main: "./index.html",

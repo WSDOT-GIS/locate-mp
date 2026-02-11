@@ -4,6 +4,10 @@
  */
 
 import { highwaySignBackgroundColor, highwaySignTextColor } from "../../colors";
+import type SimpleMarkerSymbol from "@arcgis/core/symbols/SimpleMarkerSymbol";
+import type { TextSymbolProperties } from "@arcgis/core/symbols/TextSymbol";
+import type CIMSymbol from "@arcgis/core/symbols/CIMSymbol";
+import type { CIMTextSymbol, CIMMarkerGraphic, CIMVectorMarker, CIMSymbolLayerUnion } from "@arcgis/core/symbols/cim/types";
 
 const [ {convertToCIMSymbol}, TextSymbol ] = await $arcgis.import([
 	"@arcgis/core/symbols/support/cimConversionUtils",
@@ -22,42 +26,42 @@ const defaultPrimitiveName = "milepostLabel";
  * @returns A boolean indicating whether the provided layer is a CIMVectorMarker.
  */
 export function isCimVectorMarker(
-	l: __esri.CIMSymbolLayer,
-): l is __esri.CIMVectorMarker {
+	l: CIMSymbolLayerUnion,
+): l is CIMVectorMarker {
 	return l.type === "CIMVectorMarker";
 }
 
 /**
  * Type for a CIMMarkerGraphic that has a CIMTextSymbol.
  */
-type CIMMarkerGraphicWithTextSymbol = __esri.CIMMarkerGraphic & {
-	symbol: __esri.CIMTextSymbol;
+type CIMMarkerGraphicWithTextSymbol = CIMMarkerGraphic & {
+	symbol: CIMTextSymbol;
 };
 
 /**
- * Type guard function to check if a {@link __esri.CIMMarkerGraphic|CIMMarkerGraphic} is a {@link __esri.CIMTextSymbol|CIMTextSymbol}.
- * @param g - The {@link __esri.CIMMarkerGraphic|CIMMarkerGraphic} to check.
- * @returns A boolean indicating whether the provided graphic is a {@link __esri.CIMTextSymbol|CIMTextSymbol}.
+ * Type guard function to check if a {@link CIMMarkerGraphic|CIMMarkerGraphic} is a {@link CIMTextSymbol|CIMTextSymbol}.
+ * @param g - The {@link CIMMarkerGraphic|CIMMarkerGraphic} to check.
+ * @returns A boolean indicating whether the provided graphic is a {@link CIMTextSymbol|CIMTextSymbol}.
  */
 function isCimMarkerGraphicWithTextSymbol(
-	g: __esri.CIMMarkerGraphic,
+	g: CIMMarkerGraphic,
 ): g is CIMMarkerGraphicWithTextSymbol {
 	return g.symbol.type === "CIMTextSymbol";
 }
 
 /**
- * Sets the primitive name of the first {@link __esri.CIMTextSymbol|CIMTextSymbol} found within the
- * {@link __esri.CIMSymbol|CIMSymbol}'s vector marker layers to the specified primitive name.
+ * Sets the primitive name of the first {@link CIMTextSymbol|CIMTextSymbol} found within the
+ * {@link CIMSymbol|CIMSymbol}'s vector marker layers to the specified primitive name.
  *
- * @param cimSymbol - The {@link __esri.CIMSymbol|CIMSymbol} object containing symbol layers to search.
+ * @param cimSymbol - The {@link CIMSymbol|CIMSymbol} object containing symbol layers to search.
  * @param primitiveName - The new primitive name to assign to the first
- *                        {@link __esri.CIMTextSymbol|CIMTextSymbol} found.
+ *                        {@link CIMTextSymbol|CIMTextSymbol} found.
  * @throws {TypeError} Will throw an error if the symbol has no symbol layers.
- * @returns The modified {@link __esri.CIMMarkerGraphic|CIMMarkerGraphic} if a {@link __esri.CIMTextSymbol|CIMTextSymbol} is found,
+ * @returns The modified {@link CIMMarkerGraphic|CIMMarkerGraphic} if a {@link CIMTextSymbol|CIMTextSymbol} is found,
  *          otherwise null.
  */
 function setPrimitiveNameOfFirstTextSymbol(
-	cimSymbol: __esri.CIMSymbol,
+	cimSymbol: CIMSymbol,
 	primitiveName: string,
 ) {
 	const symbolLayers = cimSymbol.data.symbol?.symbolLayers;
@@ -94,7 +98,7 @@ function setPrimitiveNameOfFirstTextSymbol(
  * @returns A CIM symbol for a milepost marker.
  */
 export function createMilepostCimSymbol(
-	textSymbolProperties: __esri.TextSymbolProperties = {
+	textSymbolProperties: TextSymbolProperties = {
 		color: highwaySignTextColor,
 		borderLineColor: highwaySignTextColor,
 		borderLineSize: 1,
@@ -110,7 +114,7 @@ export function createMilepostCimSymbol(
 	const cimSymbol = convertToCIMSymbol(
 		// Since this function doesn't officially support TextSymbols,
 		// you have to pretend its one of the supported types.
-		simpleSymbol as unknown as __esri.SimpleMarkerSymbol,
+		simpleSymbol as unknown as SimpleMarkerSymbol,
 	);
 
 	// Set the primitive name of the first text symbol to "milepostLabel".

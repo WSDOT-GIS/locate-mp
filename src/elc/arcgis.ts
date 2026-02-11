@@ -6,6 +6,8 @@ import type {
 	RouteLocation,
 	SrmpRouteLocation,
 } from "./types";
+import type geometryPolyline from "@arcgis/core/geometry/Polyline";
+import type geometryPoint from "@arcgis/core/geometry/Point";
 
 const [Graphic, Point, Polyline] = await $arcgis.import([
 	"@arcgis/core/Graphic",
@@ -31,7 +33,7 @@ function hasValidSrmpData<D extends DateType, G extends RouteGeometry>(
 	return routeLocation.Route != null && routeLocation.Srmp != null;
 }
 
-type EsriRouteGeometryTypes = __esri.Point | __esri.Polyline;
+type EsriRouteGeometryTypes = geometryPoint | geometryPolyline;
 
 /**
  * Creates a {@link Graphic} from a {@link RouteLocation}

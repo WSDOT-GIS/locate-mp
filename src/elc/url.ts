@@ -31,6 +31,7 @@ import type {
 	RouteGeometry,
 	ValidRouteLocationForMPInput,
 } from "./types";
+import type FeatureLayer from "@arcgis/core/layers/FeatureLayer";
 
 type UrlParamMapKey = "sr" | "rrt" | "rrq" | "dir" | "mp" | "endMP";
 
@@ -311,8 +312,8 @@ export function getElcParamsFromUrl(
  * @throws - {@link ElcError} if the URL contains invalid route and milepost information
  */
 export async function callElcFromUrl(
-	milepostLayer: __esri.FeatureLayer,
-	lineMilepostLayer: __esri.FeatureLayer,
+	milepostLayer: FeatureLayer,
+	lineMilepostLayer: FeatureLayer,
 	options: Pick<FindRouteLocationParameters, "outSR"> = { outSR: 3857 },
 ) {
 	const routeLocation = getElcParamsFromUrl();

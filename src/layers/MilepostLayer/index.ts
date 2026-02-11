@@ -6,6 +6,7 @@ import {
 	expressions as arcadeExpressions,
 	locationLinksContent,
 } from "./arcade";
+import type { ActionButtonProperties } from "@arcgis/core/support/actions/ActionButton";
 
 const [Collection, FieldInfo, ActionButton] = await $arcgis.import([
 	"@arcgis/core/core/Collection",
@@ -15,7 +16,7 @@ const [Collection, FieldInfo, ActionButton] = await $arcgis.import([
 
 export type FieldProperties = Required<ConstructorParameters<typeof Field>>[0];
 
-const actionButtonProperties: __esri.ActionButtonProperties[] = [
+const actionButtonProperties: ActionButtonProperties[] = [
 	{
 		active: false,
 		title: "Copy coordinates",

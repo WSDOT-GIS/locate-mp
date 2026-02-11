@@ -1,4 +1,5 @@
 import { RouteDescription } from "wsdot-route-utils";
+import type MapView from "@arcgis/core/views/MapView";
 
 const {watch} = await $arcgis.import("@arcgis/core/core/reactiveUtils");
 
@@ -20,7 +21,7 @@ type RouteLocationAttributes = Record<
  * @returns - The updated URL.
  */
 export function updateUrlSearchParams(routeLocation: RouteLocationAttributes) {
-	/* __PURE__ */ console.group(updateUrlSearchParams.name, { routeLocation });
+	/* __PURE__ */ console.debug(updateUrlSearchParams.name, { routeLocation });
 	try {
 		const srmp = `${routeLocation.Srmp}${routeLocation.Back}`;
 		const { sr, rrt, rrq } = new RouteDescription(routeLocation.Route);
@@ -111,7 +112,7 @@ export function moveUrlSearchToHash(url: URL | string) {
  * @param view - The map view.
  */
 export function setupMPUrlParamsUpdate(
-	view: __esri.MapView,
+	view: MapView,
 ) {
 	function updateUrl(visible: boolean): void {
 		// If the popup is not visible, remove the search params from the URL.

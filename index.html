@@ -9,21 +9,11 @@
   <meta name="description"
     content="Locates mileposts along Washington State Routes, as defined by the Washington State Department of Transportation's Linear Referencing System." />
   <meta name="theme-color" content="#007b5f" />
-  <script type="module" src="https://js.arcgis.com/calcite-components/3.2.1/calcite.esm.js"
-    integrity="sha512-GaU7Nv4nYs6VdhrCWqLV7olCWR3fybzbh+0EOyvifVaw/YRwnvezryuElNXoPBXcePtgJ+2BWVcoviMEEQ4zjA=="
-    crossorigin="anonymous"></script>
-  <!-- 
-    Contitionally load either the light or dark theme depending on user's settings.
-    See https://blog.jim-nielsen.com/2019/conditional-syntax-highlighting-in-dark-mode-with-css-imports/
-     -->
-  <link media="screen and (prefers-color-scheme: light)" rel="stylesheet"
-    href="https://js.arcgis.com/4.32/@arcgis/core/assets/esri/themes/light/main.css">
-  <link rel="stylesheet" media="screen and (prefers-color-scheme: dark)"
-    href="https://js.arcgis.com/4.32/@arcgis/core/assets/esri/themes/dark/main.css">
 
-  <script src="https://js.arcgis.com/4.32/init.js"></script>
-  <!-- Load map components -->
-  <script type="module" src="https://js.arcgis.com/map-components/4.32/arcgis-map-components.esm.js"></script>
+  <script type="module" src="https://js.arcgis.com/5.1.10/index.js"
+    integrity="sha512-cv9brVi45T4lA8EDI/xqpYg+40ubgWSwEroseij6XJ4Ndm5B61WZgEr1FeMDxXpzm5LGlY1KSDCoKgPUZEXsFw=="
+    crossorigin="anonymous"></script>
+
   <title>%VITE_TITLE%</title>
 </head>
 
@@ -35,7 +25,8 @@
     </wsdot-header>
     <calcite-shell-panel slot="panel-start" id="sidebar" resizable>
       <calcite-panel id="route-input-form-panel">
-        <calcite-block loading id="route-input-form-block" heading="Enter State Route & Milepost" collapsible expanded>
+        <calcite-block loading id="route-input-form-block" heading="Enter State Route & Milepost" collapsible expanded
+          icon-start="pin">
           <form id="route-input-form" class="route-input-form">
             <calcite-label for="routeInput">State Route
               <calcite-combobox id="routeInput" name="route" label="route select" selection-mode="single"
@@ -73,25 +64,29 @@
                 width="full">Submit</calcite-button>
             </div>
           </form>
-          <calcite-action id="resetFormAction" slot="control" icon="reset" text="Reset form"
+          <calcite-action id="resetFormAction" slot="actions-end" icon="reset" text="Reset form"
             label="Reset form"></calcite-action>
 
           <calcite-tooltip id="resetFormTooltip" reference-element="resetFormAction">Click this button to clear the form
             input
             controls.</calcite-tooltip>
         </calcite-block>
-        <calcite-block heading="Layer List" collapsible>
-          <div id="layerlist"></div>
+        <calcite-block heading="Layer List" collapsible icon-start="layers">
+          <arcgis-layer-list id="layer-list" show-errors visibility-appearance="checkbox"
+            reference-element="the-map"></arcgis-layer-list>
         </calcite-block>
-        <calcite-block heading="Legend" collapsible>
-          <div id="legend"></div>
+        <calcite-block heading="Legend" collapsible icon-start="legend">
+          <arcgis-legend reference-element="the-map" />
+        </calcite-block>
+        <calcite-block heading="Basemaps" collapsible icon-start="basemap">
+          <arcgis-basemap-gallery reference-element="the-map"></arcgis-basemap-gallery>
         </calcite-block>
       </calcite-panel>
     </calcite-shell-panel>
 
     <!-- <div id="viewDiv"></div> -->
     <!-- This is the map. It is set to be centered on WA. -->
-    <arcgis-map basemap="hybrid" center="-120.85,47.295" zoom="7">
+    <arcgis-map id="the-map" basemap="hybrid" center="-120.85,47.295" zoom="7">
 
       <!--
     Add map components.
@@ -101,27 +96,25 @@
     -->
 
       <!-- Top-leading -->
-      <arcgis-zoom position="top-leading"> </arcgis-zoom>
-      <arcgis-home position="top-leading"></arcgis-home>
-      <arcgis-locate position="top-leading"></arcgis-locate>
+      <arcgis-zoom slot="top-left"> </arcgis-zoom>
+      <arcgis-home slot="top-left"></arcgis-home>
+      <arcgis-locate slot="top-left"></arcgis-locate>
 
 
-      <!-- Top-trailing -->
-      <arcgis-expand position="top-trailing">
+      <!-- Top-right -->
+      <arcgis-expand slot="top-right" group="expands">
         <arcgis-search></arcgis-search>
       </arcgis-expand>
-      <arcgis-expand position="top-trailing">
-        <arcgis-layer-list></arcgis-layer-list>
-      </arcgis-expand>
-      <arcgis-expand position="top-trailing">
-        <arcgis-legend />
-      </arcgis-expand>
-      <arcgis-expand position="top-trailing">
-        <arcgis-basemap-gallery></arcgis-basemap-gallery>
-      </arcgis-expand>
+      <calcite-button id="clear-button" label="Clear all graphics" slot="top-left" icon-start="erase"
+        kind="neutral"></calcite-button>
+      <calcite-button slot="top-left" id="screenshot-button" icon-start="camera" label="Take Screenshot" kind="neutral">
+      </calcite-button>
+      <calcite-button id="exportButton" label="Export graphics to GeoJSON" icon-start="download" slot="top-left"
+        kind="neutral" hidden></calcite-button>
+      <calcite-button slot="top-left" id="toggleSidebarButton" label="Toggle Sidebar" kind="neutral"></calcite-button>
 
-      <!-- Bottom-leading -->
-      <arcgis-scale-bar position="bottom-leading" unit="dual"></arcgis-scale-bar>
+      <!-- Bottom-left -->
+      <arcgis-scale-bar slot="bottom-left" unit="dual"></arcgis-scale-bar>
 
     </arcgis-map>
     <wsdot-footer slot="footer"></wsdot-footer>

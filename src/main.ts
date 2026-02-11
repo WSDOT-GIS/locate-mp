@@ -1,7 +1,13 @@
 import type MapView from "@arcgis/core/views/MapView";
-import "@fontsource/inconsolata";
-import "@fontsource/lato";
 import "@wsdot/web-styles/css/wsdot-colors.css";
+import type arcgisCoreGraphic from "@arcgis/core/Graphic";
+import type FeatureLayer from "@arcgis/core/layers/FeatureLayer";
+import type arcgisCoreViewpoint from "@arcgis/core/Viewpoint";
+import type { ClickEvent } from "@arcgis/core/views/input/types";
+import type {
+	SceneViewGraphicHit,
+	ViewHitTestResult,
+} from "@arcgis/core/views/types";
 import type { AnalyticsInstance } from "analytics";
 import { addGraphicsToLayer } from "./addGraphicsToLayer";
 import { createErrorAlert } from "./createElcErrorAlert";
@@ -14,7 +20,6 @@ import {
 	setupMPUrlParamsUpdate,
 	updateUrlSearchParams,
 } from "./history-api/url-search";
-import { setupInterceptors } from "./interceptors";
 import { createMilepostLineLayer } from "./layers/MilepostLayer/milepost-line-layer";
 import { createMilepostPointLayer } from "./layers/MilepostLayer/milepost-point-layer";
 import { createParcelsGroupLayer } from "./layers/parcels";
@@ -105,7 +110,9 @@ document
 				console.warn("Failed to get ArcGIS JS API version", reason);
 			});
 
-		setupInterceptors();
+		import("./interceptors").then(({ setupInterceptors }) => {
+			setupInterceptors();
+		});
 
 		// Show a warning to users who are using an outdated browser.
 		import("browser-update")
@@ -136,48 +143,46 @@ document
 		 * @param hits - An array of graphic hits.
 		 * @param view - The map view.
 		 */
-		function openPopup(hits: __esri.GraphicHit[], view: MapView) {
+		function openPopup(hits: SceneViewGraphicHit[], view: MapView) {
 			/* __PURE__ */ console.debug("openPopup", {
 				hits: hits.map((h) => h.graphic.toJSON() as unknown),
 			});
-			function extractGraphic(graphicHit: __esri.GraphicHit): __esri.Graphic {
+			function extractGraphic(
+				graphicHit: SceneViewGraphicHit,
+			): arcgisCoreGraphic {
 				const { graphic } = graphicHit;
 				return graphic;
 			}
 			// Get the features that were hit by the hit test.
 			const features = hits.map(extractGraphic);
 			function updateUrlSearch() {
-				/* __PURE__ */ console.group(
+				/* __PURE__ */ console.debug(
 					"updateUrlSearch",
 					features.map((f) => f.toJSON()),
 				);
-				try {
-					const routeLocation = features
-						.map(
-							(f) =>
-								f.attributes as Record<
-									string,
-									string | number | undefined | null
-								> & {
-									Back: string;
-									Route: string;
-									Srmp: number;
-									Direction: string;
-									EndSrmp: number;
-									EndBack: string;
-								},
-						)
-						.at(0);
+				const routeLocation = features
+					.map(
+						(f) =>
+							f.attributes as Record<
+								string,
+								string | number | undefined | null
+							> & {
+								Back: string;
+								Route: string;
+								Srmp: number;
+								Direction: string;
+								EndSrmp: number;
+								EndBack: string;
+							},
+					)
+					.at(0);
 
-					if (!routeLocation) {
-						console.error("Could not find route location");
-						return;
-					}
-
-					updateUrlSearchParams(routeLocation);
-				} finally {
-					/* __PURE__ */ console.groupEnd();
+				if (!routeLocation) {
+					console.error("Could not find route location");
+					return;
 				}
+
+				updateUrlSearchParams(routeLocation);
 			}
 			/* __PURE__ */ console.debug("about to open popup", {
 				features: features.map((f) => f.toJSON() as unknown),
@@ -186,7 +191,6 @@ document
 				.openPopup({
 					features,
 					updateLocationEnabled: true,
-					shouldFocus: true,
 				})
 				.then(updateUrlSearch)
 				.catch((reason: unknown) => {
@@ -238,10 +242,8 @@ document
 			 * @param event - the event object containing map click details
 			 * @returns - a promise that resolves to an array of {@link RouteLocation|RouteLocations}
 			 */
-			async function callFindNearestRouteLocation(
-				event: __esri.ViewClickEvent,
-			) {
-				/* __PURE__ */ console.group(callFindNearestRouteLocation.name);
+			async function callFindNearestRouteLocation(event: ClickEvent) {
+				/* __PURE__ */ console.debug(callFindNearestRouteLocation.name);
 				const { x, y, spatialReference } = event.mapPoint;
 				const locations = await findNearestRouteLocations({
 					coordinates: [x, y],
@@ -334,7 +336,7 @@ document
 				setupMPUrlParamsUpdate(view);
 			});
 
-			map?.add(createParcelsGroupLayer());
+			map?.addMany([milepostPointLayer, milepostLineLayer, createParcelsGroupLayer()]);
 
 			import("./widgets/ScreenshotButton").then(({ setupScreenshotButton }) => {
 				setupScreenshotButton(view);
@@ -414,14 +416,14 @@ document
 			 * Handle the click event on the view.
 			 * @param event - The click event on the view.
 			 */
-			const handleViewOnClick: __esri.ViewClickEventHandler = (event) => {
+			const handleViewOnClick: (event: ClickEvent) => void = (event) => {
 				/**
 				 * If the hit test results are not graphic hits, call
 				 * {@link findNearestRouteLocations}. Otherwise, open the popup.
 				 * @param hitTestResult - The hit test results
 				 */
 				const handleHitTestResult = async (
-					hitTestResult: __esri.HitTestResult,
+					hitTestResult: ViewHitTestResult,
 				) => {
 					// Filter out hit test results that are not graphic hits.
 					const graphicHits = hitTestResult.results.filter(isGraphicHit);
@@ -514,14 +516,10 @@ document
 				});
 
 			if (import.meta.env.DEV) {
-				(async (...layers: __esri.FeatureLayer[]) => {
+				(async (...layers: FeatureLayer[]) => {
 					await Promise.all(layers.map((l) => l.when()));
 					const { createExportButton } = await import("./widgets/ExportButton");
-					const button = await createExportButton(layers);
-					view.ui.add(button, {
-						index: 6,
-						position: "top-leading",
-					});
+					await createExportButton(layers);
 				})(milepostLineLayer, milepostPointLayer);
 			}
 
@@ -552,7 +550,8 @@ document
 								 * point                   | A viewpoint with a specified scale
 								 * polyline (or non-point) | The feature itself.
 								 */
-								let goToTarget2D: __esri.Graphic | __esri.Viewpoint = feature;
+								let goToTarget2D: arcgisCoreGraphic | arcgisCoreViewpoint =
+									feature;
 
 								if (targetGeometry?.type === "point") {
 									const scale = Number.parseFloat(

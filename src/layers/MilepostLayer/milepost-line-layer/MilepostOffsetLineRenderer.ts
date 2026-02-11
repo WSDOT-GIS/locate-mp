@@ -2,6 +2,7 @@ import { highwaySignBackgroundColor } from "../../../colors";
 import { isCimVectorMarker } from "../create-cim";
 import { cimVectorMarker } from "../symbol";
 import { milepostLabelPrimitiveOverride } from "../symbol/primitiveOverrides";
+import type { CIMLineSymbol, CIMSolidStroke } from "@arcgis/core/symbols/cim/types";
 
 const [
 	UniqueValueRenderer,
@@ -40,7 +41,7 @@ function createClickPointSymbolLayer() {
 
 const clickPointSymbolLayer = createClickPointSymbolLayer();
 
-const strokeSymbolLayer: __esri.CIMSolidStroke = {
+const strokeSymbolLayer: CIMSolidStroke = {
 	type: "CIMSolidStroke",
 	effects: [
 		{
@@ -58,7 +59,7 @@ const strokeSymbolLayer: __esri.CIMSolidStroke = {
 	width: 2,
 	color: [255, 100, 100, 255],
 };
-const cimOffsetAndMilepostLineSymbol: __esri.CIMLineSymbol = {
+const cimOffsetAndMilepostLineSymbol: CIMLineSymbol = {
 	type: "CIMLineSymbol",
 	symbolLayers: [
 		{

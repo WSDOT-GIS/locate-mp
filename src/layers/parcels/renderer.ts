@@ -1,5 +1,6 @@
 import { rangeDomainProperties } from "@wsdot/land-use-codes";
 import { landUseCategoryToColorMapping } from "./colors";
+import type supportClassBreakInfo from "@arcgis/core/renderers/support/ClassBreakInfo";
 
 const [Color, ClassBreaksRenderer, ClassBreakInfo, SimpleFillSymbol] =
 	await $arcgis.import([
@@ -22,7 +23,7 @@ const createClassBreak = ({
 	name: label,
 	minValue,
 	maxValue,
-}: RangeDomainPropertiesItem): __esri.ClassBreakInfo => {
+}: RangeDomainPropertiesItem): supportClassBreakInfo => {
 	const symbol = defaultSymbol.clone();
 	const colorHex = landUseCategoryToColorMapping.get(label);
 	if (colorHex && symbol.outline) {

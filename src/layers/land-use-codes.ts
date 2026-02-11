@@ -1,3 +1,6 @@
+import type RangeDomain from "@arcgis/core/layers/support/RangeDomain";
+import type { RangeDomainProperties } from "@arcgis/core/layers/support/RangeDomain";
+
 /**
  * Defines the land use codes.
  * @see https://apps.leg.wa.gov/wac/default.aspx?cite=458-53-030
@@ -154,8 +157,8 @@ const createRangeDomainProperties = ([category, items]: [
 	} as const;
 };
 /**
- * An array of {@link __esri.RangeDomainProperties objects} that can be used
- * to create a {@link __esri.RangeDomain RangeDomain}
+ * An array of {@link RangeDomainProperties objects} that can be used
+ * to create a {@link RangeDomain RangeDomain}
  */
 export const rangeDomainProperties = (
 	Object.entries(landUseCodes) as [

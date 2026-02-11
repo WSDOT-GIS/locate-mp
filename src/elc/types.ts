@@ -1,6 +1,7 @@
 import type Graphic from "@arcgis/core/Graphic";
 import type { AttributeValue } from "../common/arcgis/typesAndInterfaces";
 import type { AttributesObject, TypedGraphic, XAndY } from "../types";
+import type geometryPoint from "@arcgis/core/geometry/Point";
 
 const Point = await $arcgis.import("@arcgis/core/geometry/Point");
 
@@ -192,7 +193,7 @@ export type LayerFeatureAttributes = ElcAttributes & AttributesObject;
  * A milepost point {@link Graphic}.
  */
 export type MilepostFeature = Graphic &
-	TypedGraphic<__esri.Point, LayerFeatureAttributes>;
+	TypedGraphic<geometryPoint, LayerFeatureAttributes>;
 
 const elcFieldNames = [
 	"Route",

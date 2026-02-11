@@ -1,5 +1,11 @@
 import type Geometry from "@arcgis/core/geometry/Geometry";
 import type { AttributeValue } from "./common/arcgis/typesAndInterfaces";
+import type Multipoint from "@arcgis/core/geometry/Multipoint";
+import type Polygon from "@arcgis/core/geometry/Polygon";
+import type Polyline from "@arcgis/core/geometry/Polyline";
+import type { Options } from "@arcgis/core/views/ui/types";
+import type { FeatureEditResult } from "@arcgis/core/editing/types";
+import type { SceneViewGraphicHit, ViewHit, SceneViewHit } from "@arcgis/core/views/types";
 
 /**
  * An object like one used by {@link Graphic.attributes},
@@ -53,26 +59,26 @@ export interface TypedGraphic<
 }
 
 /**
- * Tests to see if a {@link __esri.ViewHit|ViewHit} is a
- * {@link __esri.GraphicHit|GraphicHit}.
+ * Tests to see if a {@link SceneViewHit|ViewHit} is a
+ * {@link SceneViewGraphicHit|GraphicHit}.
  * @param viewHit - The view hit to be tested.
- * @returns - Returns true if {@link __esri.ViewHit.type} = "graphic",
+ * @returns - Returns true if {@link SceneViewHit.type} = "graphic",
  * false otherwise.
  */
 export function isGraphicHit(
-	viewHit: __esri.MapViewViewHit,
-): viewHit is __esri.GraphicHit {
+	viewHit: ViewHit,
+): viewHit is SceneViewGraphicHit {
 	return viewHit.type === "graphic";
 }
 
 /**
- * Checks if the given item is an instance of {@link __esri.FeatureEditResult}.
+ * Checks if the given item is an instance of {@link FeatureEditResult}.
  * @param item - The item to check.
- * @returns - Returns true if the item is an instance of {@link __esri.FeatureEditResult}, otherwise false.
+ * @returns - Returns true if the item is an instance of {@link FeatureEditResult}, otherwise false.
  */
 export function isFeatureEditResult(
 	item: unknown,
-): item is __esri.FeatureEditResult {
+): item is FeatureEditResult {
 	return (
 		item != null &&
 		typeof item === "object" &&
@@ -81,7 +87,7 @@ export function isFeatureEditResult(
 }
 
 export type UIAddPositionPosition = NonNullable<
-	__esri.UIAddPosition["position"]
+	Options["position"]
 >;
 
 /**
@@ -114,7 +120,7 @@ export interface XAndY {
  * with numeric values, `false` otherwise.
  */
 export const hasXAndY = <T extends object>(
-	value: T | nullish,
+	value: T | null | undefined,
 ): value is T & XAndY =>
 	!!value &&
 	(["x", "y"] as (keyof T)[]).every(
@@ -129,7 +135,7 @@ export const hasXAndY = <T extends object>(
  */
 export const hasPaths = <T extends object>(
 	geometry: T,
-): geometry is T & Pick<__esri.Polyline, "paths"> =>
+): geometry is T & Pick<Polyline, "paths"> =>
 	typeof geometry === "object" &&
 	"paths" in geometry &&
 	Array.isArray(geometry.paths);
@@ -141,7 +147,7 @@ export const hasPaths = <T extends object>(
  */
 export function hasRings<T extends object>(
 	geometry: T,
-): geometry is T & Pick<__esri.Polygon, "rings"> {
+): geometry is T & Pick<Polygon, "rings"> {
 	return "rings" in geometry && Array.isArray(geometry.rings);
 }
 
@@ -152,7 +158,7 @@ export function hasRings<T extends object>(
  */
 export function hasPoints<T extends object>(
 	geometry: T,
-): geometry is T & Pick<__esri.Multipoint, "points"> {
+): geometry is T & Pick<Multipoint, "points"> {
 	return (
 		typeof geometry === "object" &&
 		"points" in geometry &&

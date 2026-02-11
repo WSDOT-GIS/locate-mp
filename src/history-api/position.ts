@@ -13,6 +13,9 @@
  */
 
 import FormatError from "../common/FormatError";
+import type SceneView from "@arcgis/core/views/SceneView";
+import type MapView from "@arcgis/core/views/MapView";
+import type Point from "@arcgis/core/geometry/Point";
 
 const { webMercatorToGeographic } = await import(
 	"@arcgis/core/geometry/support/webMercatorUtils"
@@ -120,11 +123,11 @@ export function parseMapPositionHash(
  * @returns The map position hash
  */
 export function createMapPositionHash(
-	view: __esri.MapView | __esri.SceneView,
+	view: MapView | SceneView,
 ): MapPositionHashString {
 	let hash: MapPositionHashString;
 	let center = view.center.clone();
-	center = webMercatorToGeographic(center) as __esri.Point;
+	center = webMercatorToGeographic(center) as Point;
 	if (view.type === "2d") {
 		const bearing = view.rotation;
 		hash = `${view.zoom}/${center.y}/${center.x}/${bearing}/0`;
@@ -143,7 +146,7 @@ export function createMapPositionHash(
  * @param view - The map view
  * @returns The updated URL hash section
  */
-export function updateHash(url: URL, view: __esri.MapView | __esri.SceneView) {
+export function updateHash(url: URL, view: MapView | SceneView) {
 	const oldHash = url.hash;
 	const match = mapPositionHashRe.exec(oldHash);
 	const mapPositionHash = createMapPositionHash(view);

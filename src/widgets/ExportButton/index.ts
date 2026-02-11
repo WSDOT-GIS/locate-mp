@@ -17,26 +17,7 @@ export interface ExportButtonOptions {
  * @returns - A button that will clear the specified graphics when cleared.
  */
 export async function createExportButton(layers: Iterable<FeatureLayer>) {
-	// const button = document.createElement("button");
-	// button.title = "Export graphics to GeoJSON";
-	// button.ariaLabel = "Export";
-	// button.role = "button";
-	// button.classList.add(
-	// 	"esri-widget",
-	// 	"esri-widget--button",
-	// 	"esri-component",
-	// 	"locate-mp-clear-button",
-	// );
-
-	// const iconSpan = document.createElement("span");
-	// iconSpan.ariaHidden = "true";
-	// iconSpan.classList.add("esri-icon", "esri-icon-download");
-	// button.append(iconSpan);
-
-	const button = document.createElement("calcite-button");
-	button.id = "exportButton";
-	button.title = "Export graphics to GeoJSON";
-	button.iconStart = "download";
+	const button = document.querySelector<HTMLCalciteButtonElement>("#exportButton");
 
 	/**
 	 * buttonEventListener function handles the click event of the button.
@@ -51,7 +32,7 @@ export async function createExportButton(layers: Iterable<FeatureLayer>) {
 		dialog.open = true;
 	}
 
-	button.addEventListener("click", buttonEventListener, {
+	button?.addEventListener("click", buttonEventListener, {
 		passive: true,
 	});
 
