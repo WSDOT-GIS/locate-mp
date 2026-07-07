@@ -3,13 +3,18 @@
  * after which it was further modified.
  */
 
-import { highwaySignBackgroundColor, highwaySignTextColor } from "../../colors";
+import type CIMSymbol from "@arcgis/core/symbols/CIMSymbol";
+import type {
+	CIMMarkerGraphic,
+	CIMSymbolLayerUnion,
+	CIMTextSymbol,
+	CIMVectorMarker,
+} from "@arcgis/core/symbols/cim/types";
 import type SimpleMarkerSymbol from "@arcgis/core/symbols/SimpleMarkerSymbol";
 import type { TextSymbolProperties } from "@arcgis/core/symbols/TextSymbol";
-import type CIMSymbol from "@arcgis/core/symbols/CIMSymbol";
-import type { CIMTextSymbol, CIMMarkerGraphic, CIMVectorMarker, CIMSymbolLayerUnion } from "@arcgis/core/symbols/cim/types";
+import { highwaySignBackgroundColor, highwaySignTextColor } from "../../colors";
 
-const [ {convertToCIMSymbol}, TextSymbol ] = await $arcgis.import([
+const [{ convertToCIMSymbol }, TextSymbol] = await $arcgis.import([
 	"@arcgis/core/symbols/support/cimConversionUtils",
 	"@arcgis/core/symbols/TextSymbol",
 ] as const);
@@ -46,7 +51,7 @@ type CIMMarkerGraphicWithTextSymbol = CIMMarkerGraphic & {
 function isCimMarkerGraphicWithTextSymbol(
 	g: CIMMarkerGraphic,
 ): g is CIMMarkerGraphicWithTextSymbol {
-	return g.symbol.type === "CIMTextSymbol";
+	return g.symbol?.type === "CIMTextSymbol";
 }
 
 /**
@@ -64,7 +69,9 @@ function setPrimitiveNameOfFirstTextSymbol(
 	cimSymbol: CIMSymbol,
 	primitiveName: string,
 ) {
-	const symbolLayers = cimSymbol.data.symbol?.symbolLayers;
+	const symbolLayers =
+		cimSymbol.data.symbol?.type !== "CIMTextSymbol" &&
+		cimSymbol.data.symbol?.symbolLayers;
 	if (!symbolLayers) {
 		throw new TypeError("Symbol has no symbol layers");
 	}
@@ -126,10 +133,12 @@ export function createMilepostCimSymbol(
 			primitiveName: primitiveName,
 			propertyName: "textString",
 			valueExpressionInfo: {
+				// biome-ignore lint/suspicious/noTemplateCurlyInString: This is an Arcade expression
 				expression: "`${$feature.Route}\\n${$feature.SRMP}${$feature.Back}`",
 				type: "CIMExpressionInfo",
 				returnType: "String",
 			},
+			type: "CIMPrimitiveOverride",
 		},
 	];
 

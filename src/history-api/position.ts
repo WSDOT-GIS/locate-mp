@@ -50,7 +50,7 @@ export type HashGroupName = (typeof groupNames)[number];
  * - `pitch` - The pitch
  */
 const mapPositionHashRe = new RegExp(
-	String.raw`${
+	`${
 		// Create groups for zoom, center latitude, center longitude, bearing, and pitch.
 		groupNames
 			// Create a RegExp group for each group name.

@@ -78,6 +78,7 @@ export const segmentStartpointCimVectorMarker: CIMVectorMarker = {
 	...cimVectorMarker,
 	markerGraphics: [cimMarkerGraphic],
 	markerPlacement: {
+		keepUpright: false,
 		type: "CIMMarkerPlacementAtExtremities",
 		extremityPlacement: "JustBegin",
 	},
@@ -87,6 +88,7 @@ export const segmentEndpointCimVectorMarker: CIMVectorMarker = {
 	...cimVectorMarker,
 	markerGraphics: [segmentEndpointCimMarkerGraphic],
 	markerPlacement: {
+		keepUpright: false,
 		type: "CIMMarkerPlacementAtExtremities",
 		extremityPlacement: "JustEnd",
 	},

@@ -1,6 +1,6 @@
 import { getRouteList } from "./milepost-info";
 import "./route-list.css";
-import "@fontsource/lato";
+// import "@fontsource/lato";
 import "@wsdot/web-styles/css/wsdot-colors.css";
 import { RouteDescription } from "wsdot-route-utils";
 

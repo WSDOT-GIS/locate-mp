@@ -5,29 +5,39 @@
 		"clientKind": "git",
 		"useIgnoreFile": true
 	},
+	"root": true,
 	"files": {
 		"ignoreUnknown": false,
 		"includes": [
 			"**",
-			"!**/wsdot-web-styles/**",
+			"!**/wsdot-web-styles",
 			"!**/tests/routes.json",
-			"!**/*.arcade"
+			"!**/*.arcade",
+			"!**/*.svg"
 		]
 	},
 	"formatter": {
 		"enabled": true,
 		"indentStyle": "tab"
 	},
-	"assist": { "actions": { "source": { "organizeImports": "on" } } },
 	"linter": {
 		"enabled": true,
 		"rules": {
-			"preset": "recommended"
+			"preset": "recommended",
+			"a11y": "warn",
 		}
 	},
 	"javascript": {
 		"formatter": {
 			"quoteStyle": "double"
+		}
+	},
+	"assist": {
+		"enabled": true,
+		"actions": {
+			"source": {
+				"organizeImports": "on"
+			}
 		}
 	}
 }

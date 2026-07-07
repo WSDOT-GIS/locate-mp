@@ -360,7 +360,7 @@ document
 				.then(() => {
 					const shell = document.querySelector<HTMLElement>("calcite-shell");
 					const loader = document.querySelector<HTMLElement>("calcite-loader");
-					if (!!shell && !!loader) {
+					if (shell && loader) {
 						shell.hidden = false;
 						loader.hidden = true;
 					}

@@ -1,8 +1,11 @@
+import type {
+	CIMLineSymbol,
+	CIMSolidStroke,
+} from "@arcgis/core/symbols/cim/types";
 import { highwaySignBackgroundColor } from "../../../colors";
 import { isCimVectorMarker } from "../create-cim";
 import { cimVectorMarker } from "../symbol";
 import { milepostLabelPrimitiveOverride } from "../symbol/primitiveOverrides";
-import type { CIMLineSymbol, CIMSolidStroke } from "@arcgis/core/symbols/cim/types";
 
 const [
 	UniqueValueRenderer,
@@ -31,6 +34,7 @@ function createClickPointSymbolLayer() {
 	const clickPointCimSymbol = convertToCIMSymbol(clickPointSymbol);
 
 	const clickPointSymbolLayer =
+		clickPointCimSymbol.data.symbol?.type !== "CIMTextSymbol" &&
 		clickPointCimSymbol.data.symbol?.symbolLayers?.filter(isCimVectorMarker)[0];
 
 	if (!clickPointSymbolLayer) {
@@ -67,6 +71,7 @@ const cimOffsetAndMilepostLineSymbol: CIMLineSymbol = {
 			markerPlacement: {
 				type: "CIMMarkerPlacementAtExtremities",
 				extremityPlacement: "JustEnd",
+				keepUpright: false,
 				angleToLine: false,
 			},
 		},

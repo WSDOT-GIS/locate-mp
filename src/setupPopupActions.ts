@@ -1,11 +1,11 @@
-import type { ActionEvent } from "@arcgis/core/widgets/Popup/types";
-import type MapView from "@arcgis/core/views/MapView";
-import type { GeometryUnion } from "@arcgis/core/geometry/types";
-import type Multipoint from "@arcgis/core/geometry/Multipoint";
 import type Geometry from "@arcgis/core/geometry/Geometry";
+import type Multipoint from "@arcgis/core/geometry/Multipoint";
+import type geometryPoint from "@arcgis/core/geometry/Point";
 import type Polygon from "@arcgis/core/geometry/Polygon";
 import type Polyline from "@arcgis/core/geometry/Polyline";
-import type geometryPoint from "@arcgis/core/geometry/Point";
+import type { GeometryUnion } from "@arcgis/core/geometry/types";
+import type MapView from "@arcgis/core/views/MapView";
+import type { ActionEvent } from "@arcgis/core/widgets/Popup/types";
 
 const [Point, {webMercatorToGeographic}, {on}] = await $arcgis.import([
 	"@arcgis/core/geometry/Point",

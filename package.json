@@ -14,7 +14,7 @@
 		"clean": "git clean -dfx --exclude \"node_modules/**\" --exclude \".mailmap\" --exclude \".env.local\"",
 		"dev": "vite",
 		"dev-browserstack": "vite --host",
-		"lint": "biome check .",
+		"lint": "biome lint",
 		"publish": "npm run build && node tools/publish.mjs",
 		"test": "vitest run --bail 1",
 		"test:watch": "vitest",

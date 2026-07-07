@@ -98,8 +98,8 @@
 			"label": "biome check github reporter",
 			"detail": "Run biome check with github reporter",
 			"type": "process",
-			"command": "node",
-			"args": ["${workspaceFolder}/tools/run-biome-fix-github-reporter.js"],
+			"command": "bunx",
+			"args": ["biome", "lint", "--reporter=github"],
 			"problemMatcher": [
 				{
 					"pattern": [
