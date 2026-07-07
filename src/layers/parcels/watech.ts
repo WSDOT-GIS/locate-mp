@@ -1,4 +1,4 @@
-const arcGisOnlineId = "569bb6050d634ff7a7f2462378ca974c";
+const arcGisOnlineId = "2b603a599a0842a3b2284c04c8927f35";
 const parcelIdField = "PARCEL_ID_NR";
 
 const [FeatureLayer, PortalItem, LabelClass] = await $arcgis.import([
@@ -17,7 +17,7 @@ const [
 
 /**
  * Parcels layer
- * @see {@link https://wsdot.maps.arcgis.com/home/item.html?id=569bb6050d634ff7a7f2462378ca974c}
+ * @see {@link https://geo.wa.gov/maps/2b603a599a0842a3b2284c04c8927f35}
  */
 export const parcelsLayer = new FeatureLayer({
 	id: "parcels",
