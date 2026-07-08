@@ -22,7 +22,9 @@ export async function addGraphicsToLayer(
 	// Get the added features from the edits result by querying the milepost layer
 	// for the features with matching object IDs.
 	const query = milepostLayer.createQuery();
-	query.objectIds = editsResult.addFeatureResults.map((r) => r.objectId).filter(oid => oid != null);
+	query.objectIds = editsResult.addFeatureResults
+		.map((r) => r.objectId)
+		.filter((oid) => oid != null);
 	const results = await milepostLayer.queryFeatures(query);
 
 	return results.features;

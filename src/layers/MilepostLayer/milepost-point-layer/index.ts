@@ -33,7 +33,7 @@ export function createMilepostPointLayer(spatialReference: SpatialReference) {
 		source: [],
 		popupEnabled: true,
 		hasM: true,
-		visible: true
+		visible: true,
 	});
 
 	milepostLayer.renderer = createRenderer();

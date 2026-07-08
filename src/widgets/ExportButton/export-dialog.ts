@@ -21,7 +21,7 @@ function* queryLayers(layers: Iterable<FeatureLayer>) {
 	 */
 	async function executeQuery(layer: FeatureLayer, listItem: HTMLLIElement) {
 		const SpatialReference = await $arcgis.import(
-			"@arcgis/core/geometry/SpatialReference"
+			"@arcgis/core/geometry/SpatialReference",
 		);
 		const { arcgisToGeoJSON } = await import("@terraformer/arcgis");
 

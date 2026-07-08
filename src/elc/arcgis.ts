@@ -1,3 +1,5 @@
+import type geometryPoint from "@arcgis/core/geometry/Point";
+import type geometryPolyline from "@arcgis/core/geometry/Polyline";
 import { hasPaths, hasXAndY } from "../types";
 import { ElcError } from "./errors";
 import type {
@@ -6,8 +8,6 @@ import type {
 	RouteLocation,
 	SrmpRouteLocation,
 } from "./types";
-import type geometryPolyline from "@arcgis/core/geometry/Polyline";
-import type geometryPoint from "@arcgis/core/geometry/Point";
 
 const [Graphic, Point, Polyline] = await $arcgis.import([
 	"@arcgis/core/Graphic",

@@ -1,12 +1,11 @@
-
 import type FeatureLayer from "@arcgis/core/layers/FeatureLayer";
 import type Field from "@arcgis/core/layers/support/Field";
+import type { ActionButtonProperties } from "@arcgis/core/support/actions/ActionButton";
 import type { MilepostExpressionInfo } from "./arcade";
 import {
 	expressions as arcadeExpressions,
 	locationLinksContent,
 } from "./arcade";
-import type { ActionButtonProperties } from "@arcgis/core/support/actions/ActionButton";
 
 const [Collection, FieldInfo, ActionButton] = await $arcgis.import([
 	"@arcgis/core/core/Collection",
@@ -63,7 +62,7 @@ export function createPopupTemplate(milepostLayer: FeatureLayer) {
 	});
 
 	if (!popupTemplate) {
-		throw new TypeError("Expected `popupTemplate` to be defined and non-null.")
+		throw new TypeError("Expected `popupTemplate` to be defined and non-null.");
 	}
 	const actions = createActionButtons();
 	popupTemplate.actions = actions;

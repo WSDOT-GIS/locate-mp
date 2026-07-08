@@ -19,10 +19,12 @@ use the following url structure. RT represents Route Type.
 The options are SP for Spur, CO for Couplet and AR for Alternate.
 www.snagmp.com/link3.php?SR=503&MP=35.23&RT=SP
 */
-import { findRouteLocations } from ".";
+
+import type FeatureLayer from "@arcgis/core/layers/FeatureLayer";
 import { addGraphicsToLayer } from "../addGraphicsToLayer";
 import FormatError from "../common/FormatError";
 import { padRoute } from "../utils";
+import { findRouteLocations } from ".";
 import { routeLocationToGraphic } from "./arcgis";
 import { ElcError } from "./errors";
 import type {
@@ -31,7 +33,6 @@ import type {
 	RouteGeometry,
 	ValidRouteLocationForMPInput,
 } from "./types";
-import type FeatureLayer from "@arcgis/core/layers/FeatureLayer";
 
 type UrlParamMapKey = "sr" | "rrt" | "rrq" | "dir" | "mp" | "endMP";
 

@@ -64,7 +64,7 @@ export function* getComboboxItems(routes: Map<string, string[]>) {
 			shield += " ";
 		}
 
-		element.description = `${shield}${Number.parseInt(routeDescription.sr)}`;
+		element.description = `${shield}${Number.parseInt(routeDescription.sr, 10)}`;
 		if (routeDescription.rrt) {
 			element.description += ` ${routeDescription.rrtDescription}`;
 			if (routeDescription.rrq) {

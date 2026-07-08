@@ -1,7 +1,7 @@
-import { RouteDescription } from "wsdot-route-utils";
 import type MapView from "@arcgis/core/views/MapView";
+import { RouteDescription } from "wsdot-route-utils";
 
-const {watch} = await $arcgis.import("@arcgis/core/core/reactiveUtils");
+const { watch } = await $arcgis.import("@arcgis/core/core/reactiveUtils");
 
 type RouteLocationAttributes = Record<
 	string,
@@ -111,9 +111,7 @@ export function moveUrlSearchToHash(url: URL | string) {
  * the selected feature.
  * @param view - The map view.
  */
-export function setupMPUrlParamsUpdate(
-	view: MapView,
-) {
+export function setupMPUrlParamsUpdate(view: MapView) {
 	function updateUrl(visible: boolean): void {
 		// If the popup is not visible, remove the search params from the URL.
 		if (!visible || !view.popup?.selectedFeature) {

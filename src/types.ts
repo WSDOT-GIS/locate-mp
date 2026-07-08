@@ -1,11 +1,15 @@
+import type { FeatureEditResult } from "@arcgis/core/editing/types";
 import type Geometry from "@arcgis/core/geometry/Geometry";
-import type { AttributeValue } from "./common/arcgis/typesAndInterfaces";
 import type Multipoint from "@arcgis/core/geometry/Multipoint";
 import type Polygon from "@arcgis/core/geometry/Polygon";
 import type Polyline from "@arcgis/core/geometry/Polyline";
+import type {
+	SceneViewGraphicHit,
+	SceneViewHit,
+	ViewHit,
+} from "@arcgis/core/views/types";
 import type { Options } from "@arcgis/core/views/ui/types";
-import type { FeatureEditResult } from "@arcgis/core/editing/types";
-import type { SceneViewGraphicHit, ViewHit, SceneViewHit } from "@arcgis/core/views/types";
+import type { AttributeValue } from "./common/arcgis/typesAndInterfaces";
 
 /**
  * An object like one used by {@link Graphic.attributes},
@@ -65,9 +69,7 @@ export interface TypedGraphic<
  * @returns - Returns true if {@link SceneViewHit.type} = "graphic",
  * false otherwise.
  */
-export function isGraphicHit(
-	viewHit: ViewHit,
-): viewHit is SceneViewGraphicHit {
+export function isGraphicHit(viewHit: ViewHit): viewHit is SceneViewGraphicHit {
 	return viewHit.type === "graphic";
 }
 
@@ -76,9 +78,7 @@ export function isGraphicHit(
  * @param item - The item to check.
  * @returns - Returns true if the item is an instance of {@link FeatureEditResult}, otherwise false.
  */
-export function isFeatureEditResult(
-	item: unknown,
-): item is FeatureEditResult {
+export function isFeatureEditResult(item: unknown): item is FeatureEditResult {
 	return (
 		item != null &&
 		typeof item === "object" &&
@@ -86,9 +86,7 @@ export function isFeatureEditResult(
 	);
 }
 
-export type UIAddPositionPosition = NonNullable<
-	Options["position"]
->;
+export type UIAddPositionPosition = NonNullable<Options["position"]>;
 
 /**
  * An enumeration of {@link UIAddPositionPosition} values.

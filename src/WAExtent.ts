@@ -1,7 +1,7 @@
 const [Extent, SpatialReference] = await $arcgis.import([
 	"@arcgis/core/geometry/Extent",
-	"@arcgis/core/geometry/SpatialReference"
-] as const)
+	"@arcgis/core/geometry/SpatialReference",
+] as const);
 
 /**
  * The extent of WA.

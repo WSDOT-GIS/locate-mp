@@ -1,3 +1,4 @@
+import type { FeatureLayerProperties } from "@arcgis/core/layers/FeatureLayer";
 import { objectIdFieldName } from "../../../elc/types";
 import waExtent from "../../../WAExtent";
 import { createPopupTemplate } from "..";
@@ -5,7 +6,6 @@ import { routeSegmentLabelExpressionInfo } from "../arcade";
 import { segmentFields as fields } from "../fields";
 import { lineSegmentLabelClass } from "./label";
 import MilepostOffsetLineRenderer from "./MilepostOffsetLineRenderer";
-import type { FeatureLayerProperties } from "@arcgis/core/layers/FeatureLayer";
 
 const [FeatureLayer, ExpressionInfo] = await $arcgis.import([
 	"@arcgis/core/layers/FeatureLayer",

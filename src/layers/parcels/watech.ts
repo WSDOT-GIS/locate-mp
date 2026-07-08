@@ -7,10 +7,7 @@ const [FeatureLayer, PortalItem, LabelClass] = await $arcgis.import([
 	"@arcgis/core/layers/support/LabelClass",
 ] as const);
 
-const [
-	{ labelSymbol },
-	{ renderer },
-] = await Promise.all([
+const [{ labelSymbol }, { renderer }] = await Promise.all([
 	import("./label"),
 	import("./renderer"),
 ]);

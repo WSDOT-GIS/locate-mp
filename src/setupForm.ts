@@ -11,10 +11,10 @@ import {
 	type RouteInputEvent,
 } from "./widgets/route-input/SrmpInputForm";
 
-const [ Viewpoint, Point ] = await $arcgis.import([
+const [Viewpoint, Point] = await $arcgis.import([
 	"@arcgis/core/Viewpoint",
 	"@arcgis/core/geometry/Point",
-])
+]);
 
 /**
  * Sets up the form for user input and adds event listener to capture SRMP input.

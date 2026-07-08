@@ -17,7 +17,8 @@ export interface ExportButtonOptions {
  * @returns - A button that will clear the specified graphics when cleared.
  */
 export async function createExportButton(layers: Iterable<FeatureLayer>) {
-	const button = document.querySelector<HTMLCalciteButtonElement>("#exportButton");
+	const button =
+		document.querySelector<HTMLCalciteButtonElement>("#exportButton");
 
 	/**
 	 * buttonEventListener function handles the click event of the button.

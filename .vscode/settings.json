@@ -24,10 +24,7 @@
 	],
 	"json.schemas": [
 		{
-			"fileMatch": [
-				".ncurc",
-				".ncurc.json"
-			],
+			"fileMatch": [".ncurc", ".ncurc.json"],
 			"url": "https://raw.githubusercontent.com/raineorshine/npm-check-updates/main/src/types/RunOptions.json"
 		}
 	],
@@ -38,9 +35,7 @@
 		"https://json.schemastore.org/github-workflow.json": [
 			".github/workflows/node.js.yml"
 		],
-		"https://json.schemastore.org/lefthook.json": [
-			"lefthook.yml"
-		],
+		"https://json.schemastore.org/lefthook.json": ["lefthook.yml"],
 		"https://raw.githubusercontent.com/raineorshine/npm-check-updates/main/src/types/RunOptions.json": [
 			".ncurc.yml"
 		]
@@ -60,5 +55,6 @@
 	},
 	"[css]": {
 		"editor.defaultFormatter": "biomejs.biome"
-	}
+	},
+	"js/ts.experimental.useTsgo": true
 }

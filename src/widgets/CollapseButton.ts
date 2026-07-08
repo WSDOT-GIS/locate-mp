@@ -1,6 +1,5 @@
 import type MapView from "@arcgis/core/views/MapView";
 
-
 /**
  * Sets up the sidebar collapse button in the given MapView.
  * @param view - The MapView to add the collapse button to.
@@ -15,15 +14,13 @@ export function setupSidebarCollapseButton(view: MapView) {
 		throw new Error("Failed to find sidebar element");
 	}
 
-	// <calcite-button id="toggleSidebarButton" text="Toggle Sidebar" icon="collapse"></calcite-button>
-	const collapseButton = document.querySelector<HTMLCalciteButtonElement>("calcite-button#toggleSidebarButton")
+	const collapseButton = document.querySelector<HTMLCalciteButtonElement>(
+		"calcite-button#toggleSidebarButton",
+	);
 	if (!collapseButton) {
-		throw new TypeError("Failed to find collapse button element")
+		throw new TypeError("Failed to find collapse button element");
 	}
-	// const collapseButton = document.createElement("calcite-button");
-	// collapseButton.setAttribute("id", "toggleSidebarButton");
-	// collapseButton.setAttribute("text", "Toggle Sidebar");
-	// collapseButton.setAttribute("icon", "collapse");
+
 	collapseButton.addEventListener("click", () => {
 		sideBar.collapsed = !sideBar.collapsed;
 		setSidebarToggleIcon();
@@ -32,6 +29,7 @@ export function setupSidebarCollapseButton(view: MapView) {
 	// Set sidebar collapsed to false if document width is greater than or equal to 768px.
 	const threshold = Number.parseInt(
 		import.meta.env.VITE_WIDTH_THRESHOLD_IN_PIXELS,
+		10,
 	);
 	if (window.outerWidth >= threshold) {
 		sideBar.collapsed = false;
@@ -45,7 +43,7 @@ export function setupSidebarCollapseButton(view: MapView) {
 	// import { watch } from "@arcgis/core/core/reactiveUtils";
 
 	// When the popup is opened, collapse the sidebar if the screen is small.
-	$arcgis.import("@arcgis/core/core/reactiveUtils").then(({watch}) => {
+	$arcgis.import("@arcgis/core/core/reactiveUtils").then(({ watch }) => {
 		watch(
 			() => view.popup?.visible,
 			(visible) => {
@@ -55,9 +53,7 @@ export function setupSidebarCollapseButton(view: MapView) {
 				}
 			},
 		);
-
-	})
-
+	});
 
 	setSidebarToggleIcon();
 }

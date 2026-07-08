@@ -24,7 +24,7 @@ import { createMilepostLineLayer } from "./layers/MilepostLayer/milepost-line-la
 import { createMilepostPointLayer } from "./layers/MilepostLayer/milepost-point-layer";
 import { createParcelsGroupLayer } from "./layers/parcels";
 import { tempLayer } from "./layers/TempLayer";
-import { hasXAndY, isGraphicHit, UIAddPositions } from "./types";
+import { hasXAndY, isGraphicHit } from "./types";
 import waExtent from "./WAExtent";
 import { setupSidebarCollapseButton } from "./widgets/CollapseButton";
 
@@ -336,7 +336,11 @@ document
 				setupMPUrlParamsUpdate(view);
 			});
 
-			map?.addMany([milepostPointLayer, milepostLineLayer, createParcelsGroupLayer()]);
+			map?.addMany([
+				milepostPointLayer,
+				milepostLineLayer,
+				createParcelsGroupLayer(),
+			]);
 
 			import("./widgets/ScreenshotButton").then(({ setupScreenshotButton }) => {
 				setupScreenshotButton(view);
@@ -382,30 +386,11 @@ document
 				popup.defaultPopupTemplateEnabled = true;
 			});
 
-			// const searchGroup = new Expand({
-			// 	icon: "search",
-			// 	content: setupSearch(view),
-			// });
-			// view.ui.add(searchGroup, {
-			// 	index: 0,
-			// 	position: UIAddPositions.topTrailing,
-			// });
-
-			// setupLayerList({ view, container: "layerlist" }).catch(
-			// 	(reason: unknown) => {
-			// 		console.error("Failed to setup layer list", reason);
-			// 	},
-			// );
-
-			// const home = new Home({
-			// 	view,
-			// });
 			import("./widgets/ClearButton").then(
 				({ createClearButton }) => {
-					const clearButton = createClearButton({
+					createClearButton({
 						layers: [milepostPointLayer, milepostLineLayer, tempLayer],
 					});
-					view.ui.add([clearButton], UIAddPositions.topLeading);
 				},
 				(reason: unknown) => {
 					console.error("Failed to setup clear button", reason);
@@ -584,3 +569,8 @@ document
 			);
 		}
 	});
+
+(async () => {
+	const { setupSearch } = await import("./widgets/setupSearch.ts");
+	setupSearch();
+})();

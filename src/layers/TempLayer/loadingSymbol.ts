@@ -1,4 +1,4 @@
-const [ SimpleMarkerSymbol, SimpleLineSymbol ] = await $arcgis.import([
+const [SimpleMarkerSymbol, SimpleLineSymbol] = await $arcgis.import([
 	"@arcgis/core/symbols/SimpleMarkerSymbol",
 	"@arcgis/core/symbols/SimpleLineSymbol",
 ] as const);

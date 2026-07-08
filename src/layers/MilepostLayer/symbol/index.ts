@@ -1,5 +1,11 @@
+import type {
+	CIMBackgroundCallout,
+	CIMMarkerGraphic,
+	CIMPointSymbol,
+	CIMTextSymbol,
+	CIMVectorMarker,
+} from "@arcgis/core/symbols/cim/types";
 import { milepostLabelPrimitiveOverride } from "./primitiveOverrides";
-import type { CIMPointSymbol, CIMVectorMarker, CIMMarkerGraphic, CIMTextSymbol, CIMBackgroundCallout } from "@arcgis/core/symbols/cim/types";
 
 const CIMSymbol = await $arcgis.import("@arcgis/core/symbols/CIMSymbol");
 

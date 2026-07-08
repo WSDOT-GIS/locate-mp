@@ -1,10 +1,6 @@
-import type MapView from "@arcgis/core/views/MapView";
-import type SceneView from "@arcgis/core/views/SceneView";
-
-const [Search, LocatorSearchSource] = await $arcgis.import([
-	"@arcgis/core/widgets/Search",
+const LocatorSearchSource = await $arcgis.import(
 	"@arcgis/core/widgets/Search/LocatorSearchSource",
-] as const);
+);
 
 /**
  * Retrieves the search sources for the application.
@@ -36,11 +32,14 @@ function getSearchSources() {
  * @param view - The map or scene view.
  * @returns A Search widget.
  */
-export function setupSearch(view: MapView | SceneView) {
-	return new Search({
-		view,
-		includeDefaultSources: false,
-		sources: getSearchSources(),
+export function setupSearch() {
+	const searchElement = document.querySelector("arcgis-search");
+	if (!searchElement) {
+		throw TypeError("Could not find arcgis-search element");
+	}
+	searchElement.addEventListener("arcgisReady", ({ target: search }) => {
+		const searchSources = getSearchSources();
+		search.sources.push(...searchSources);
 	});
 }
 

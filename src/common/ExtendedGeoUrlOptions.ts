@@ -1,8 +1,8 @@
 import {
 	CrsLabel,
+	createGeoUriString,
 	type GeoUriString,
 	type GeoUrlOptions,
-	createGeoUriString,
 } from "../urls/GeoUri";
 
 export type AuthorityUppercase = "EPSG" | "ESRI";

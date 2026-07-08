@@ -1,5 +1,5 @@
-import type { FieldProperties } from ".";
 import { objectIdFieldName } from "../../elc/types";
+import type { FieldProperties } from ".";
 
 /**
  * Field names for the milepost layer

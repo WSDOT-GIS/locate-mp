@@ -2,10 +2,9 @@
 /// <reference types="vitest" />
 
 import { fileURLToPath } from "node:url";
-import browserslistToEsbuild from "browserslist-to-esbuild";
 import { defineConfig } from "vite";
 
-export default defineConfig((env) => ({
+export default defineConfig((_env) => ({
 	appType: "spa",
 	base: "/data/tools/LocateMP",
 	resolve: {

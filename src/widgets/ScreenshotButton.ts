@@ -126,9 +126,8 @@ export async function setupScreenshotButton(mapView: MapView) {
 		"calcite-button#screenshot-button",
 	);
 	if (!screenshotButton) {
-		throw new TypeError("Screenshot button not found")
+		throw new TypeError("Screenshot button not found");
 	}
-
 
 	const buttonEventListener: NonNullable<
 		typeof screenshotButton.onclick

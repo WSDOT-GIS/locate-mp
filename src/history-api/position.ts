@@ -12,10 +12,10 @@
  * > distinct from the map hash. ...
  */
 
-import FormatError from "../common/FormatError";
-import type SceneView from "@arcgis/core/views/SceneView";
-import type MapView from "@arcgis/core/views/MapView";
 import type Point from "@arcgis/core/geometry/Point";
+import type MapView from "@arcgis/core/views/MapView";
+import type SceneView from "@arcgis/core/views/SceneView";
+import FormatError from "../common/FormatError";
 
 const { webMercatorToGeographic } = await import(
 	"@arcgis/core/geometry/support/webMercatorUtils"
@@ -54,7 +54,7 @@ const mapPositionHashRe = new RegExp(
 		// Create groups for zoom, center latitude, center longitude, bearing, and pitch.
 		groupNames
 			// Create a RegExp group for each group name.
-			.map((groupName) => String.raw`(?<${groupName}>${numRePattern})`)
+			.map((groupName) => `(?<${groupName}>${numRePattern})`)
 			// Join the RegExp groups with a "/".
 			.join("/")
 		// Append the optional query string group.

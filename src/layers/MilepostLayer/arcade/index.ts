@@ -1,9 +1,9 @@
+import type { PopupTemplateContentCreatorFunction } from "@arcgis/core/popup/types";
 import AccessControlArcade from "./Access Control.arcade?raw";
 import CityArcade from "./City.arcade?raw";
 import CountyArcade from "./County.arcade?raw";
 import lastCoordinateArcade from "./Last Coordinate.arcade?raw";
 import LocateMPUrlArcade from "./LocateMP URL.arcade?raw";
-import LocationLinksArcade from "./Location Links.arcade?raw";
 import MilepostLabelArcade from "./Milepost Label.arcade?raw";
 import PopupTitle from "./Popup Title.arcade?raw";
 import splitRouteIdFunction from "./parts/splitRouteId.function.arcade?raw";
@@ -12,23 +12,94 @@ import routeSegmentLabelArcade from "./Route Segment Label.arcade?raw";
 import SRViewURLArcade from "./SRView URL.arcade?raw";
 import TownshipSectionArcade from "./Township Section.arcade?raw";
 
-const [ExpressionInfo, ExpressionContent] = await $arcgis.import([
-	"@arcgis/core/popup/ExpressionInfo",
-	"@arcgis/core/popup/content/ExpressionContent",
+const [CustomContent, ExpressionInfo] = await $arcgis.import([
+	"@arcgis/core/popup/content/CustomContent.js",
+	"@arcgis/core/popup/ExpressionInfo.js",
 ] as const);
 
-export const locationLinksContent = new ExpressionContent({
-	expressionInfo: {
-		expression: [splitRouteIdFunction, LocationLinksArcade].join("\n"),
-		title: "Location Links",
-	},
+const SpatialReference = await $arcgis.import(
+	"@arcgis/core/geometry/SpatialReference.js",
+);
+const { webMercatorToGeographic } = await $arcgis.import(
+	"@arcgis/core/geometry/support/webMercatorUtils.js",
+);
+
+/**
+ * Creates a list of links to external map web apps (e.g., Google Maps)
+ * for the current location.
+ * @param event - The graphic associated with the popup's current feature.
+ * @returns - A calcite chip group with links to map web apps.
+ */
+const linkListCreator: PopupTemplateContentCreatorFunction = (event) => {
+	const {graphic} = event;
+	let { geometry } = graphic;
+	if (!geometry) {
+		throw new TypeError("Expected non-nullish geometry");
+	}
+
+	let lat: number;
+	let lon: number;
+
+	// Project geometry to WGS 1984 if necessary
+	if (!geometry.spatialReference.equals(SpatialReference.WGS84)) {
+		if (!geometry.spatialReference.equals(SpatialReference.WebMercator)) {
+			throw new Error("Only WGS84 and Web Mercator are supported");
+		}
+
+		geometry = webMercatorToGeographic(geometry);
+	}
+
+	// Get the latitude (Y) and longitude (X) values.
+	if (geometry.type === "point") {
+		lon = geometry.x;
+		lat = geometry.y;
+	} else if (geometry.type === "polyline") {
+		[lon, lat] = geometry.paths.slice(-1)[0].slice(-1)[0].slice(0, 1);
+	} else {
+		throw new TypeError("Only points and polylines are supported.");
+	}
+
+	// Construct label + URLs pairs.
+	const urls = [
+		[
+			"Google Panoramic",
+			`https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lat},${lon}`,
+		],
+		["Google Pin", `https://maps.google.com/maps?t=k&q=loc:${lat},${lon}`],
+		["Bing Maps", `https://bing.com/maps/default.aspx?where=${lat},${lon}`],
+		[
+			"GeoHack",
+			`https://geohack.toolforge.org/geohack.php?params=${lat};${lon}`,
+		],
+	] as const;
+
+	const chipGroup = document.createElement("calcite-chip-group");
+	chipGroup.scale = "s";
+	chipGroup.label = "external mapping app links";
+
+	for (const [linkText, linkUrl] of urls) {
+		const chip = document.createElement("calcite-chip");
+		chip.label = linkText;
+		chip.value = linkUrl;
+		const link = document.createElement("calcite-link");
+		link.append(linkText);
+		link.href = linkUrl;
+		link.target = "blank";
+		chip.append(link);
+		chipGroup.append(chip);
+	}
+
+	return chipGroup;
+};
+
+export const locationLinksContent = new CustomContent({
+	creator: linkListCreator,
 });
 
-export const routeSegmentLabelExpressionInfo =
-	{
-		title: "Route Segment Label",
-		expression: routeSegmentLabelArcade,
-	} as const;
+export const routeSegmentLabelExpressionInfo = {
+	title: "Route Segment Label",
+	expression: routeSegmentLabelArcade,
+} as const;
 
 function replaceVariableValueInArcadeExpression(
 	arcade: string,

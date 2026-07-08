@@ -35,7 +35,7 @@ const updateWaTechAlert = (
 	} else {
 		message = waTechAlert.querySelector("[slot='message']");
 		if (!message) {
-			/* __PURE__ */  console.error("failed to locate alert's 'message' slot.")
+			/* __PURE__ */ console.error("failed to locate alert's 'message' slot.");
 			return false;
 		}
 	}

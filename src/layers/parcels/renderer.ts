@@ -1,6 +1,6 @@
+import type supportClassBreakInfo from "@arcgis/core/renderers/support/ClassBreakInfo";
 import { rangeDomainProperties } from "@wsdot/land-use-codes";
 import { landUseCategoryToColorMapping } from "./colors";
-import type supportClassBreakInfo from "@arcgis/core/renderers/support/ClassBreakInfo";
 
 const [Color, ClassBreaksRenderer, ClassBreakInfo, SimpleFillSymbol] =
 	await $arcgis.import([

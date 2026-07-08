@@ -6,4 +6,4 @@
 
 import { $ } from "bun";
 
-await Promise.all([$`bunx -b vite build`, $`bunx -b tsc --noEmit`])
+await Promise.all([$`bunx -b vite build`, $`bunx -b tsc --noEmit`]);

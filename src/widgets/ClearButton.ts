@@ -16,7 +16,11 @@ export interface ClearButtonOptions {
  * @returns A button that will clear the specified graphics when cleared.
  */
 export function createClearButton(options: ClearButtonOptions) {
-	const button = document.querySelector<HTMLCalciteButtonElement>("clear-button");
+	const button =
+		document.querySelector<HTMLCalciteButtonElement>("#clear-button");
+	if (!button) {
+		throw new TypeError("#clear-button element not found");
+	}
 
 	const { layers } = options;
 

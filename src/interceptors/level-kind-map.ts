@@ -11,5 +11,4 @@ export const levelKindMap: Map<LogLevel, Alert["kind"]> = new Map([
 	["info", "info"],
 ] as const);
 
-
 export default levelKindMap;

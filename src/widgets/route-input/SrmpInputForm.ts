@@ -115,7 +115,8 @@ export async function createSrmpInputForm() {
 		throw new TypeError("Form does not implement SrmpInputForm interface");
 	}
 
-	const routeElement = form.querySelector<HTMLCalciteComboboxElement>("#routeInput");
+	const routeElement =
+		form.querySelector<HTMLCalciteComboboxElement>("#routeInput");
 	if (!routeElement) {
 		throw new Error("route element not found");
 	}
@@ -128,9 +129,7 @@ export async function createSrmpInputForm() {
 	});
 
 	routeElement.addEventListener("calciteComboboxChange", (event) => {
-		const selectedItems = (
-			event.target
-		)?.selectedItems;
+		const selectedItems = event.target?.selectedItems;
 
 		if (selectedItems && selectedItems.length > 0) {
 			const selectedItem = selectedItems[0];

@@ -7,7 +7,7 @@ import type { GeometryUnion } from "@arcgis/core/geometry/types";
 import type MapView from "@arcgis/core/views/MapView";
 import type { ActionEvent } from "@arcgis/core/widgets/Popup/types";
 
-const [Point, {webMercatorToGeographic}, {on}] = await $arcgis.import([
+const [Point, { webMercatorToGeographic }, { on }] = await $arcgis.import([
 	"@arcgis/core/geometry/Point",
 	"@arcgis/core/geometry/support/webMercatorUtils",
 	"@arcgis/core/core/reactiveUtils",
@@ -115,27 +115,28 @@ export function setupPopupActions(view: MapView) {
 	const { alert, messageElement } = createCalciteAlert();
 	document.body.append(alert);
 
-	const popupTriggerActionEventHandler: ((event: ActionEvent) => void) =
-		(event) => {
-			if (event.action.id === "copy") {
-				try {
-					const feature = view.popup?.selectedFeature;
-					const lastPoint = getLastPoint(feature?.geometry);
-					if (lastPoint) {
-						copyPointToClipboard(lastPoint, { alert, messageElement });
-					}
-				} catch (error) {
-					if (error instanceof Error) {
-						console.error(error.message, error);
-					}
-					if (error instanceof TypeError) {
-						messageElement.textContent = "Failed to copy coordinates.";
-					} else {
-						throw error;
-					}
+	const popupTriggerActionEventHandler: (event: ActionEvent) => void = (
+		event,
+	) => {
+		if (event.action.id === "copy") {
+			try {
+				const feature = view.popup?.selectedFeature;
+				const lastPoint = getLastPoint(feature?.geometry);
+				if (lastPoint) {
+					copyPointToClipboard(lastPoint, { alert, messageElement });
+				}
+			} catch (error) {
+				if (error instanceof Error) {
+					console.error(error.message, error);
+				}
+				if (error instanceof TypeError) {
+					messageElement.textContent = "Failed to copy coordinates.";
+				} else {
+					throw error;
 				}
 			}
-		};
+		}
+	};
 	on(() => view.popup, "trigger-action", popupTriggerActionEventHandler);
 }
 

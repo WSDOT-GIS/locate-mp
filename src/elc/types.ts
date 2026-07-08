@@ -1,7 +1,7 @@
 import type Graphic from "@arcgis/core/Graphic";
+import type geometryPoint from "@arcgis/core/geometry/Point";
 import type { AttributeValue } from "../common/arcgis/typesAndInterfaces";
 import type { AttributesObject, TypedGraphic, XAndY } from "../types";
-import type geometryPoint from "@arcgis/core/geometry/Point";
 
 const Point = await $arcgis.import("@arcgis/core/geometry/Point");
 
