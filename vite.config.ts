@@ -1,6 +1,8 @@
 /// <reference types="vite/client" />
 /// <reference types="vitest" />
 
+import { fileURLToPath } from "node:url";
+import browserslistToEsbuild from "browserslist-to-esbuild";
 import { defineConfig } from "vite";
 
 export default defineConfig((env) => ({
@@ -26,7 +28,9 @@ export default defineConfig((env) => ({
 	test: {
 		name: "LocateMP",
 		environment: "jsdom",
-		setupFiles: "./tests/mocks-setup.ts",
+		exclude: ["e2e/**", "node_modules/**", "dist/**"],
+		root: fileURLToPath(new URL("./", import.meta.url)),
+		setupFiles: ["globalSetup.ts", "./tests/mocks-setup.ts"],
 		reporters: ["default", "junit"],
 		outputFile: {
 			junit: "./test-results/test-results.xml",
@@ -54,5 +58,8 @@ export default defineConfig((env) => ({
 				"cobertura",
 			],
 		},
+		// isolate: false,
+		// fileParallelism: false
+		pool: "threads",
 	},
 }));

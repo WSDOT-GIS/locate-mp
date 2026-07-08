@@ -38,7 +38,7 @@ stages:
             name: use_node
             displayName: Install Node
             inputs:
-              version: 24.X
+              version: 26.X
 
           - task: Npm@1
             name: setup_bun

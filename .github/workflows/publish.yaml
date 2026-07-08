@@ -33,23 +33,17 @@ jobs:
         uses: actions/checkout@v4
 
       # Install pnpm
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
-
-      # Setup Node. Install latest version ("*")
-      - name: Set up Node
-        uses: actions/setup-node@v4
+      - uses: oven-sh/setup-bun@v2
         with:
-          node-version: "*"
-          cache: "pnpm"
+          bun-version: latest
 
       # Install project dependencies
       - name: Install dependencies
-        run: pnpm install
+        run: bun install
 
       # Build the app
       - name: Build
-        run: pnpm exec vite build --base '/wsdot-mp-map'
+        run: bunx vite build --base '/wsdot-mp-map'
 
       # Setup Github Pages
       - name: Setup Pages
