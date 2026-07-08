@@ -2,7 +2,7 @@
 
 <!-- #region badges -->
 
-[![Node.js CI](https://github.com/WSDOT-GIS/wsdot-mp-map/actions/workflows/node.js.yml/badge.svg)](https://github.com/WSDOT-GIS/wsdot-mp-map/actions/workflows/node.js.yml) [![pages-build-deployment](https://github.com/WSDOT-GIS/wsdot-mp-map/actions/workflows/pages/pages-build-deployment/badge.svg?branch=gh-pages)](https://github.com/WSDOT-GIS/wsdot-mp-map/actions/workflows/pages/pages-build-deployment) [![CodeQL](https://github.com/WSDOT-GIS/wsdot-mp-map/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/WSDOT-GIS/wsdot-mp-map/actions/workflows/github-code-scanning/codeql)
+[![Node.js CI](https://github.com/WSDOT-GIS/locate-mp/actions/workflows/node.js.yml/badge.svg)](https://github.com/WSDOT-GIS/locate-mp/actions/workflows/node.js.yml) [![pages-build-deployment](https://github.com/WSDOT-GIS/locate-mp/actions/workflows/pages/pages-build-deployment/badge.svg?branch=gh-pages)](https://github.com/WSDOT-GIS/locate-mp/actions/workflows/pages/pages-build-deployment) [![CodeQL](https://github.com/WSDOT-GIS/locate-mp/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/WSDOT-GIS/locate-mp/actions/workflows/github-code-scanning/codeql)
 
 <!-- #endregion badges -->
 

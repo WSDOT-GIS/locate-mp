@@ -108,7 +108,7 @@ export function getGithubPagesUrlFromGithubRepoUrl(
  * @returns An HTML anchor linking to app source code.
  */
 export function createGithubLink(
-	fallbackUrl = "https://github.com/wsdot-gis/wsdot-mp-map",
+	fallbackUrl = "https://github.com/wsdot-gis/locate-mp",
 ) {
 	// const githubSvg = convertSimpleIconToSvgElement(siGithub);
 	const a = document.createElement("a");

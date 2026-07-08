@@ -11,8 +11,8 @@ import {
 	isGithubRepoUrl,
 } from "../src/common/Github-Link";
 
-const pagesUrl = "https://wsdot-gis.github.io/wsdot-mp-map";
-const repoUrl = "https://github.com/WSDOT-GIS/wsdot-mp-map";
+const pagesUrl = "https://wsdot-gis.github.io/locate-mp";
+const repoUrl = "https://github.com/WSDOT-GIS/locate-mp";
 
 describe.concurrent("Github link", () => {
 	// Create regular expressions to match the expected responses.

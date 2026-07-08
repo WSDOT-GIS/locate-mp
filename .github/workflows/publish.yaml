@@ -43,7 +43,7 @@ jobs:
 
       # Build the app
       - name: Build
-        run: bunx vite build --base '/wsdot-mp-map'
+        run: bunx vite build --base '/locate-mp'
 
       # Setup Github Pages
       - name: Setup Pages

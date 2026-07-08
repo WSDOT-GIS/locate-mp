@@ -59,7 +59,7 @@
 		"vitest": "^4.1.10"
 	},
 	"repository": {
-		"url": "https://github.com/WSDOT-GIS/wsdot-mp-map.git",
+		"url": "https://github.com/WSDOT-GIS/locate-mp.git",
 		"type": "git"
 	},
 	"keywords": [
