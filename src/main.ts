@@ -30,13 +30,14 @@ import { setupSidebarCollapseButton } from "./widgets/CollapseButton";
 
 import("./urls/isIntranet.ts");
 
-const [{ whenOnce }, Graphic, Polyline, Viewpoint, config] =
+const [{ whenOnce }, Graphic, Polyline, Viewpoint, config, GroupLayer] =
 	await $arcgis.import([
 		"@arcgis/core/core/reactiveUtils",
 		"@arcgis/core/Graphic",
 		"@arcgis/core/geometry/Polyline",
 		"@arcgis/core/Viewpoint",
 		"@arcgis/core/config",
+		"@arcgis/core/layers/GroupLayer",
 	] as const);
 
 let analytics: AnalyticsInstance | null = null;
@@ -49,526 +50,563 @@ import("./setupAnalytics")
 		console.error("Failed to load Tag Manager", reason);
 	});
 
-document
-	.querySelector("arcgis-map")
-	?.addEventListener("arcgisViewReadyChange", (event) => {
-		/**
-		 * Get a reference to the `WebMap`
-		 * from the `event.detail` object.
-		 */
-		const { map, view } = event.target;
-		// Add more functionality here.
+const arcgisMapElement = document.querySelector("arcgis-map");
+(async () => {
+	if (!arcgisMapElement) {
+		throw new TypeError("Could not find map element");
+	}
 
-		/* __PURE__ */ console.log("Map loaded", map);
+	const WebMap = await $arcgis.import("@arcgis/core/WebMap.js");
+	const EsriMap = await $arcgis.import("@arcgis/core/Map.js");
 
-		function convertToClassName(environment: HostEnvironment) {
-			return environment.replaceAll(/\s/g, "_").toLowerCase();
+	function getWebmapId() {
+		const hash = location.hash.slice(1);
+		const params = new URLSearchParams(hash);
+		let webmapId: string | null = null;
+
+		for (const [key, value] of params.entries()) {
+			if (key.toLocaleLowerCase() === "webmap") {
+				webmapId = value;
+			}
 		}
 
-		/**
-		 * Updates the document title and page title to indicate the current non-production environment.
-		 * @returns In a non-production environment, the environment name. Otherwise, null.
-		 */
-		const updateNonProductionTitle = async () => {
-			const { getHostEnvironment } = await import("./getHostEnvironment.ts");
-			const environment = getHostEnvironment();
-			// Exit if non-production environment was not detected.
-			if (!environment) {
-				return environment;
-			}
+		return webmapId;
+	}
 
-			const suffix = ` - ${environment}`;
-			document.title += suffix;
+	const webmapId = getWebmapId();
 
-			const className = convertToClassName(environment);
+	if (webmapId) {
+		const map = new WebMap({
+			portalItem: {
+				id: webmapId,
+			},
+		});
+		arcgisMapElement.map = map;
+	} else {
+		// TODO: setup basemaps
+		const map = new EsriMap({
+			basemap: {
+				portalItem: {
+					id: "952d28d8d68c4e9ca2db7c7d68307af0",
+				},
+			},
+		});
 
-			document.body.classList.add(className);
+		arcgisMapElement.map = map;
+	}
+})();
 
-			// Update the title displayed on the page.
-			const titleSelector = "wsdot-header > [slot='title']";
-			const titleElement = document.body.querySelector(titleSelector);
-			if (!titleElement) {
-				console.debug("Could not find title element in wsdot-header", {
-					selector: titleSelector,
-				});
-			} else {
-				titleElement.append(suffix);
-			}
+arcgisMapElement?.addEventListener("arcgisViewReadyChange", (event) => {
+	/**
+	 * Get a reference to the `WebMap`
+	 * from the `event.detail` object.
+	 */
+	const { map, view } = event.target;
 
+	function convertToClassName(environment: HostEnvironment) {
+		return environment.replaceAll(/\s/g, "_").toLowerCase();
+	}
+
+	/**
+	 * Updates the document title and page title to indicate the current non-production environment.
+	 * @returns In a non-production environment, the environment name. Otherwise, null.
+	 */
+	const updateNonProductionTitle = async () => {
+		const { getHostEnvironment } = await import("./getHostEnvironment.ts");
+		const environment = getHostEnvironment();
+		// Exit if non-production environment was not detected.
+		if (!environment) {
 			return environment;
-		};
+		}
 
-		// Update title to show user is using a non-production environment.
-		updateNonProductionTitle();
+		const suffix = ` - ${environment}`;
+		document.title += suffix;
 
-		$arcgis
-			.import("@arcgis/core/kernel")
-			.then(({ fullVersion }) => {
-				console.debug(`ArcGIS Maps SDK for JavaScript version ${fullVersion}`);
-			})
-			.catch((reason: unknown) => {
-				console.warn("Failed to get ArcGIS JS API version", reason);
+		const className = convertToClassName(environment);
+
+		document.body.classList.add(className);
+
+		// Update the title displayed on the page.
+		const titleSelector = "wsdot-header > [slot='title']";
+		const titleElement = document.body.querySelector(titleSelector);
+		if (!titleElement) {
+			console.debug("Could not find title element in wsdot-header", {
+				selector: titleSelector,
 			});
+		} else {
+			titleElement.append(suffix);
+		}
 
-		import("./interceptors").then(({ setupInterceptors }) => {
-			setupInterceptors();
+		return environment;
+	};
+
+	// Update title to show user is using a non-production environment.
+	updateNonProductionTitle();
+
+	$arcgis
+		.import("@arcgis/core/kernel")
+		.then(({ fullVersion }) => {
+			console.debug(`ArcGIS Maps SDK for JavaScript version ${fullVersion}`);
+		})
+		.catch((reason: unknown) => {
+			console.warn("Failed to get ArcGIS JS API version", reason);
 		});
 
-		// Show a warning to users who are using an outdated browser.
-		import("browser-update")
-			.then(({ default: browserUpdate }) => {
-				browserUpdate();
+	import("./interceptors").then(({ setupInterceptors }) => {
+		setupInterceptors();
+	});
+
+	// Show a warning to users who are using an outdated browser.
+	import("browser-update")
+		.then(({ default: browserUpdate }) => {
+			browserUpdate();
+		})
+		.catch((reason: unknown) => {
+			console.error("Failed to setup browser update", reason);
+		});
+
+	window.addEventListener("elc-error", (event) => {
+		const reason = event.detail;
+		createErrorAlert(reason);
+	});
+
+	window.addEventListener("format-error", (event) => {
+		const reason = event.detail;
+		createErrorAlert(reason);
+	});
+
+	const defaultSearchRadius = 3000;
+
+	const elcMainlinesOnlyFilter =
+		"LIKE '___' OR RelRouteType IN ('SP', 'CO', 'AR')";
+
+	/**
+	 * Opens a popup with the features that were hit by the hit test.
+	 * @param hits - An array of graphic hits.
+	 * @param view - The map view.
+	 */
+	function openPopup(hits: SceneViewGraphicHit[], view: MapView) {
+		/* __PURE__ */ console.debug("openPopup", {
+			hits: hits.map((h) => h.graphic.toJSON() as unknown),
+		});
+		function extractGraphic(
+			graphicHit: SceneViewGraphicHit,
+		): arcgisCoreGraphic {
+			const { graphic } = graphicHit;
+			return graphic;
+		}
+		// Get the features that were hit by the hit test.
+		const features = hits.map(extractGraphic);
+		function updateUrlSearch() {
+			/* __PURE__ */ console.debug(
+				"updateUrlSearch",
+				features.map((f) => f.toJSON()),
+			);
+			const routeLocation = features
+				.map(
+					(f) =>
+						f.attributes as Record<
+							string,
+							string | number | undefined | null
+						> & {
+							Back: string;
+							Route: string;
+							Srmp: number;
+							Direction: string;
+							EndSrmp: number;
+							EndBack: string;
+						},
+				)
+				.at(0);
+
+			if (!routeLocation) {
+				console.error("Could not find route location");
+				return;
+			}
+
+			updateUrlSearchParams(routeLocation);
+		}
+		/* __PURE__ */ console.debug("about to open popup", {
+			features: features.map((f) => f.toJSON() as unknown),
+		});
+		view
+			.openPopup({
+				features,
+				updateLocationEnabled: true,
 			})
+			.then(updateUrlSearch)
 			.catch((reason: unknown) => {
-				console.error("Failed to setup browser update", reason);
+				console.error("openPopup failed", reason);
 			});
+	}
 
-		window.addEventListener("elc-error", (event) => {
-			const reason = event.detail;
-			createErrorAlert(reason);
-		});
+	function testWebGL2Support() {
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		if (window.WebGL2RenderingContext) {
+			return true;
+			// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		}
+		if (window.WebGLRenderingContext && !window.WebGL2RenderingContext) {
+			console.error(
+				"your browser has WebGL support, but no WebGL2 support at all",
+			);
+		} else {
+			console.error("your browser has no WebGL support at all");
+		}
+		return false;
+	}
 
-		window.addEventListener("format-error", (event) => {
-			const reason = event.detail;
-			createErrorAlert(reason);
-		});
-
-		const defaultSearchRadius = 3000;
-
-		const elcMainlinesOnlyFilter =
-			"LIKE '___' OR RelRouteType IN ('SP', 'CO', 'AR')";
+	if (!testWebGL2Support()) {
+		// Get the contents of the no-webgl template and replace the document body with them.
+		const template = document.getElementById("no-webgl") as HTMLTemplateElement;
+		document.body.innerHTML = template.innerHTML;
+	} else {
+		import("./components/disclaimer")
+			.then(({ setupDisclaimerLink }) => {
+				// Setup disclaimer modal
+				const link = document.querySelector<HTMLAnchorElement>("wsdot-footer");
+				if (!link) {
+					console.error("Failed to find disclaimer link");
+				} else {
+					setupDisclaimerLink(link);
+				}
+			})
+			.catch((error: unknown) => {
+				console.error("Failed to load disclaimer", error);
+			});
 
 		/**
-		 * Opens a popup with the features that were hit by the hit test.
-		 * @param hits - An array of graphic hits.
-		 * @param view - The map view.
+		 * A function that handles the event of finding the nearest route location
+		 * when the user clicks on the map.
+		 * @param event - the event object containing map click details
+		 * @returns - a promise that resolves to an array of {@link RouteLocation|RouteLocations}
 		 */
-		function openPopup(hits: SceneViewGraphicHit[], view: MapView) {
-			/* __PURE__ */ console.debug("openPopup", {
-				hits: hits.map((h) => h.graphic.toJSON() as unknown),
+		async function callFindNearestRouteLocation(event: ClickEvent) {
+			/* __PURE__ */ console.debug(callFindNearestRouteLocation.name);
+			const { x, y, spatialReference } = event.mapPoint;
+			const locations = await findNearestRouteLocations({
+				coordinates: [x, y],
+				inSR: spatialReference.wkid ?? view.spatialReference.wkid ?? 3857,
+				referenceDate: new Date(),
+				routeFilter: elcMainlinesOnlyFilter,
+				searchRadius: defaultSearchRadius,
 			});
-			function extractGraphic(
-				graphicHit: SceneViewGraphicHit,
-			): arcgisCoreGraphic {
-				const { graphic } = graphicHit;
-				return graphic;
+			const location = locations[0];
+
+			if (location instanceof Error) {
+				throw location;
 			}
-			// Get the features that were hit by the hit test.
-			const features = hits.map(extractGraphic);
-			function updateUrlSearch() {
-				/* __PURE__ */ console.debug(
-					"updateUrlSearch",
-					features.map((f) => f.toJSON()),
+
+			const locationGraphic = routeLocationToGraphic(location);
+
+			if (locationGraphic.geometry == null) {
+				throw new TypeError(
+					"locationGraphic.geometry should not be null or undefined",
 				);
-				const routeLocation = features
-					.map(
-						(f) =>
-							f.attributes as Record<
-								string,
-								string | number | undefined | null
-							> & {
-								Back: string;
-								Route: string;
-								Srmp: number;
-								Direction: string;
-								EndSrmp: number;
-								EndBack: string;
-							},
-					)
-					.at(0);
-
-				if (!routeLocation) {
-					console.error("Could not find route location");
-					return;
-				}
-
-				updateUrlSearchParams(routeLocation);
 			}
-			/* __PURE__ */ console.debug("about to open popup", {
-				features: features.map((f) => f.toJSON() as unknown),
-			});
-			view
-				.openPopup({
-					features,
-					updateLocationEnabled: true,
-				})
-				.then(updateUrlSearch)
-				.catch((reason: unknown) => {
-					console.error("openPopup failed", reason);
-				});
-		}
-
-		function testWebGL2Support() {
-			// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-			if (window.WebGL2RenderingContext) {
-				return true;
-				// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-			}
-			if (window.WebGLRenderingContext && !window.WebGL2RenderingContext) {
-				console.error(
-					"your browser has WebGL support, but no WebGL2 support at all",
-				);
-			} else {
-				console.error("your browser has no WebGL support at all");
-			}
-			return false;
-		}
-
-		if (!testWebGL2Support()) {
-			// Get the contents of the no-webgl template and replace the document body with them.
-			const template = document.getElementById(
-				"no-webgl",
-			) as HTMLTemplateElement;
-			document.body.innerHTML = template.innerHTML;
-		} else {
-			import("./components/disclaimer")
-				.then(({ setupDisclaimerLink }) => {
-					// Setup disclaimer modal
-					const link =
-						document.querySelector<HTMLAnchorElement>("wsdot-footer");
-					if (!link) {
-						console.error("Failed to find disclaimer link");
-					} else {
-						setupDisclaimerLink(link);
-					}
-				})
-				.catch((error: unknown) => {
-					console.error("Failed to load disclaimer", error);
-				});
-
-			/**
-			 * A function that handles the event of finding the nearest route location
-			 * when the user clicks on the map.
-			 * @param event - the event object containing map click details
-			 * @returns - a promise that resolves to an array of {@link RouteLocation|RouteLocations}
-			 */
-			async function callFindNearestRouteLocation(event: ClickEvent) {
-				/* __PURE__ */ console.debug(callFindNearestRouteLocation.name);
-				const { x, y, spatialReference } = event.mapPoint;
-				const locations = await findNearestRouteLocations({
-					coordinates: [x, y],
-					inSR: spatialReference.wkid ?? view.spatialReference.wkid ?? 3857,
-					referenceDate: new Date(),
-					routeFilter: elcMainlinesOnlyFilter,
-					searchRadius: defaultSearchRadius,
-				});
-				const location = locations[0];
-
-				if (location instanceof Error) {
-					throw location;
-				}
-
-				const locationGraphic = routeLocationToGraphic(location);
-
-				if (locationGraphic.geometry == null) {
-					throw new TypeError(
-						"locationGraphic.geometry should not be null or undefined",
-					);
-				}
-				/*
+			/*
 					A point geometry will be converted to a polyline geometry,
 					with the start point being the click location and the end point
 					being the milepost location.
 					*/
-				if (hasXAndY(locationGraphic.geometry)) {
-					const { x: routeX, y: routeY } = locationGraphic.geometry;
-					locationGraphic.geometry = new Polyline({
-						paths: [
-							[
-								[x, y],
-								[routeX, routeY],
-							],
+			if (hasXAndY(locationGraphic.geometry)) {
+				const { x: routeX, y: routeY } = locationGraphic.geometry;
+				locationGraphic.geometry = new Polyline({
+					paths: [
+						[
+							[x, y],
+							[routeX, routeY],
 						],
-						spatialReference,
-					});
-				} else if (!locationGraphic.geometry) {
-					throw new TypeError("locationGraphic.geometry should not be null");
-				}
-
-				const layer = milepostLineLayer;
-
-				/* __PURE__ */ console.debug(
-					"location graphic",
-					locationGraphic.toJSON(),
-				);
-				addGraphicsToLayer(layer, [locationGraphic])
-					.then((addResults) => {
-						/* __PURE__ */ console.debug(
-							"addResults returned by addGraphicsToLayer",
-							addResults,
-						);
-					})
-					.catch((error: unknown) => {
-						console.error("addGraphicsToLayer failed", error);
-					});
-				return locations;
+					],
+					spatialReference,
+				});
+			} else if (!locationGraphic.geometry) {
+				throw new TypeError("locationGraphic.geometry should not be null");
 			}
 
-			config.applicationName = "WSDOT Mileposts";
-			config.log.level = import.meta.env.DEV ? "info" : "error";
+			const layer = milepostLineLayer;
 
-			const { request } = config;
-			// This app only uses publicly available map services,
-			// so we don't need to use identity.
-			request.useIdentity = false;
-			// Initialize httpDomains array if it does not already have a value.
-			if (!request.httpsDomains) {
-				request.httpsDomains = [];
-			}
-			request.httpsDomains.push("wsdot.wa.gov", "data.wsdot.wa.gov");
-
-			const milepostPointLayer = createMilepostPointLayer(
-				waExtent.spatialReference,
+			/* __PURE__ */ console.debug(
+				"location graphic",
+				locationGraphic.toJSON(),
 			);
-			const milepostLineLayer = createMilepostLineLayer(
-				waExtent.spatialReference,
-			);
-
-			// Show the instructions alert once the mileposts layer has been loaded.
-			milepostPointLayer.on("layerview-create", () => {
-				const alert =
-					document.body.querySelector<HTMLCalciteAlertElement>(
-						"#instructionsAlert",
+			addGraphicsToLayer(layer, [locationGraphic])
+				.then((addResults) => {
+					/* __PURE__ */ console.debug(
+						"addResults returned by addGraphicsToLayer",
+						addResults,
 					);
-				if (alert) {
-					alert.open = true;
+				})
+				.catch((error: unknown) => {
+					console.error("addGraphicsToLayer failed", error);
+				});
+			return locations;
+		}
+
+		config.applicationName = "WSDOT Mileposts";
+		config.log.level = import.meta.env.DEV ? "info" : "error";
+
+		const { request } = config;
+		// This app only uses publicly available map services,
+		// so we don't need to use identity.
+		request.useIdentity = false;
+		// Initialize httpDomains array if it does not already have a value.
+		if (!request.httpsDomains) {
+			request.httpsDomains = [];
+		}
+		request.httpsDomains.push("wsdot.wa.gov", "data.wsdot.wa.gov");
+
+		const milepostPointLayer = createMilepostPointLayer(
+			waExtent.spatialReference,
+		);
+		const milepostLineLayer = createMilepostLineLayer(
+			waExtent.spatialReference,
+		);
+
+		const mpGroupLayer = new GroupLayer({
+			id: "milepost-group",
+			title: "Mileposts",
+			layers: [milepostPointLayer, milepostLineLayer],
+		});
+
+		// Show the instructions alert once the mileposts layer has been loaded.
+		milepostPointLayer.on("layerview-create", () => {
+			const alert =
+				document.body.querySelector<HTMLCalciteAlertElement>(
+					"#instructionsAlert",
+				);
+			if (alert) {
+				alert.open = true;
+			}
+			setupMPUrlParamsUpdate(view);
+		});
+
+		map?.addMany([mpGroupLayer, createParcelsGroupLayer()]);
+
+		import("./widgets/ScreenshotButton").then(({ setupScreenshotButton }) => {
+			setupScreenshotButton(view);
+		});
+
+		import("./setupPopupActions")
+			.then(({ setupPopupActions }) => {
+				setupPopupActions(view);
+			})
+			.catch((error: unknown) => {
+				console.error("Failed to setupPopupActions.", error);
+			});
+
+		try {
+			setupSidebarCollapseButton(view);
+		} catch (error) {
+			console.error("Failed to setup sidebar collapse button.", error);
+		}
+
+		whenOnce(() => map?.initialized)
+			.then(() => {
+				const shell = document.querySelector<HTMLElement>("calcite-shell");
+				const loader = document.querySelector<HTMLElement>("calcite-loader");
+				if (shell && loader) {
+					shell.hidden = false;
+					loader.hidden = true;
 				}
-				setupMPUrlParamsUpdate(view);
+			})
+			.catch((error: unknown) => {
+				console.error("Failed to initialize map.", error);
 			});
 
-			map?.addMany([
-				milepostPointLayer,
-				milepostLineLayer,
-				createParcelsGroupLayer(),
-			]);
+		// Add the loading indicator widget to the map.
+		import("./widgets/LoadingIndicator").then(
+			({ setupViewLoadingIndicator }) => setupViewLoadingIndicator(view),
+			(reason: unknown) => {
+				console.error("Failed to add loading indicator", reason);
+			},
+		);
 
-			import("./widgets/ScreenshotButton").then(({ setupScreenshotButton }) => {
-				setupScreenshotButton(view);
-			});
+		// When the view's popup has been created, enable the default popup template.
+		whenOnce(() => view.popup).then((popup) => {
+			popup.defaultPopupTemplateEnabled = true;
+		});
 
-			import("./setupPopupActions")
-				.then(({ setupPopupActions }) => {
-					setupPopupActions(view);
-				})
-				.catch((error: unknown) => {
-					console.error("Failed to setupPopupActions.", error);
+		import("./widgets/ClearButton").then(
+			({ createClearButton }) => {
+				createClearButton({
+					layers: [milepostPointLayer, milepostLineLayer, tempLayer],
 				});
+			},
+			(reason: unknown) => {
+				console.error("Failed to setup clear button", reason);
+			},
+		);
 
-			try {
-				setupSidebarCollapseButton(view);
-			} catch (error) {
-				console.error("Failed to setup sidebar collapse button.", error);
-			}
-
-			whenOnce(() => map?.initialized)
-				.then(() => {
-					const shell = document.querySelector<HTMLElement>("calcite-shell");
-					const loader = document.querySelector<HTMLElement>("calcite-loader");
-					if (shell && loader) {
-						shell.hidden = false;
-						loader.hidden = true;
-					}
-				})
-				.catch((error: unknown) => {
-					console.error("Failed to initialize map.", error);
-				});
-
-			// Add the loading indicator widget to the map.
-			import("./widgets/LoadingIndicator").then(
-				({ setupViewLoadingIndicator }) => setupViewLoadingIndicator(view),
-				(reason: unknown) => {
-					console.error("Failed to add loading indicator", reason);
-				},
-			);
-
-			// When the view's popup has been created, enable the default popup template.
-			whenOnce(() => view.popup).then((popup) => {
-				popup.defaultPopupTemplateEnabled = true;
-			});
-
-			import("./widgets/ClearButton").then(
-				({ createClearButton }) => {
-					createClearButton({
-						layers: [milepostPointLayer, milepostLineLayer, tempLayer],
-					});
-				},
-				(reason: unknown) => {
-					console.error("Failed to setup clear button", reason);
-				},
-			);
-
+		/**
+		 * Handle the click event on the view.
+		 * @param event - The click event on the view.
+		 */
+		const handleViewOnClick: (event: ClickEvent) => void = (event) => {
 			/**
-			 * Handle the click event on the view.
-			 * @param event - The click event on the view.
+			 * If the hit test results are not graphic hits, call
+			 * {@link findNearestRouteLocations}. Otherwise, open the popup.
+			 * @param hitTestResult - The hit test results
 			 */
-			const handleViewOnClick: (event: ClickEvent) => void = (event) => {
-				/**
-				 * If the hit test results are not graphic hits, call
-				 * {@link findNearestRouteLocations}. Otherwise, open the popup.
-				 * @param hitTestResult - The hit test results
-				 */
-				const handleHitTestResult = async (
-					hitTestResult: ViewHitTestResult,
-				) => {
-					// Filter out hit test results that are not graphic hits.
-					const graphicHits = hitTestResult.results.filter(isGraphicHit);
+			const handleHitTestResult = async (hitTestResult: ViewHitTestResult) => {
+				// Filter out hit test results that are not graphic hits.
+				const graphicHits = hitTestResult.results.filter(isGraphicHit);
 
-					// If the user clicked on a graphic, open its popup.
-					if (graphicHits.length > 0) {
-						openPopup(graphicHits, view);
-						return;
-					}
+				// If the user clicked on a graphic, open its popup.
+				if (graphicHits.length > 0) {
+					openPopup(graphicHits, view);
+					return;
+				}
 
-					// Add graphic to temp layer
+				// Add graphic to temp layer
 
-					const tempGraphic = new Graphic({
-						geometry: event.mapPoint,
-					});
-
-					const tempAddResults = await tempLayer.applyEdits({
-						addFeatures: [tempGraphic],
-					});
-					for (const addResult of tempAddResults.addFeatureResults) {
-						// addResult.error CAN be null. Esri's type def. is wrong.
-						if (addResult.error != null) {
-							console.error(
-								"There was an error adding the temporary graphic where the user clicked.",
-								addResult.error,
-							);
-						}
-					}
-
-					// Call findNearestRouteLocations
-					try {
-						await callFindNearestRouteLocation(event);
-						removeTempGraphic().catch((reason: unknown) => {
-							console.error("Failed to remove temporary graphic", reason);
-						});
-					} catch (error) {
-						const message =
-							"Could not find a route location near this location.";
-
-						console.error(message, error);
-
-						const handleError = (reason: unknown) => {
-							console.error("Failed to remove temporary graphic", reason);
-						};
-
-						view
-							.openPopup({
-								title: "Route Location Not Found",
-								content: message,
-								location: event.mapPoint,
-							})
-							.catch((reason: unknown) => {
-								console.error(`Popup with message "${message}" failed.`, {
-									reason,
-									event,
-								});
-							})
-							.finally(() => {
-								removeTempGraphic().catch(handleError);
-							});
-					}
-
-					/**
-					 * Removes the temporary graphic.
-					 * @returns - a promise that resolves when the graphic is removed.
-					 */
-					function removeTempGraphic() {
-						// Remove the temporary graphic
-						return tempLayer.applyEdits({
-							deleteFeatures: [tempGraphic],
-						});
-					}
-				};
-				view
-					.hitTest(event, {
-						include: [milepostPointLayer, milepostLineLayer],
-					})
-					.then(handleHitTestResult)
-					.catch((reason: unknown) => {
-						console.error("hitTest failed", reason);
-					});
-			};
-			view.on("click", handleViewOnClick);
-
-			// Set up the form for inputting SRMPdata.
-			import("./setupForm")
-				.then(({ setupForm }) => setupForm(view, milepostPointLayer))
-				.catch((reason: unknown) => {
-					console.error("failed to setup form", reason);
+				const tempGraphic = new Graphic({
+					geometry: event.mapPoint,
 				});
 
-			if (import.meta.env.DEV) {
-				(async (...layers: FeatureLayer[]) => {
-					await Promise.all(layers.map((l) => l.when()));
-					const { createExportButton } = await import("./widgets/ExportButton");
-					await createExportButton(layers);
-				})(milepostLineLayer, milepostPointLayer);
-			}
-
-			Promise.all([milepostPointLayer.when(), milepostLineLayer.when()]).then(
-				() => {
-					/**
-					 * Calls the ELC API to retrieve graphics from the URL and adds them to the milepost layer.
-					 * @returns A promise that resolves when the graphics have been added to the layer and the view has been updated.
-					 */
-					const callElc = async () => {
-						// Call the features from the URL and add them to the layer.
-						const addedFeatures = await callElcFromUrl(
-							milepostPointLayer,
-							milepostLineLayer,
+				const tempAddResults = await tempLayer.applyEdits({
+					addFeatures: [tempGraphic],
+				});
+				for (const addResult of tempAddResults.addFeatureResults) {
+					// addResult.error CAN be null. Esri's type def. is wrong.
+					if (addResult.error != null) {
+						console.error(
+							"There was an error adding the temporary graphic where the user clicked.",
+							addResult.error,
 						);
-						if (addedFeatures) {
-							// Zoom to the first feature (if any are in the array).
-							// Only expecting to ever be a single feature present.
-							const feature = addedFeatures.at(0);
-							if (feature) {
-								const targetGeometry = feature?.geometry;
+					}
+				}
 
-								/**
-								 * The zoom target.
-								 *
-								 * Geometry Type           | Zoom Target
-								 * ------------------------|-----------------------------------
-								 * point                   | A viewpoint with a specified scale
-								 * polyline (or non-point) | The feature itself.
-								 */
-								let goToTarget2D: arcgisCoreGraphic | arcgisCoreViewpoint =
-									feature;
+				// Call findNearestRouteLocations
+				try {
+					await callFindNearestRouteLocation(event);
+					removeTempGraphic().catch((reason: unknown) => {
+						console.error("Failed to remove temporary graphic", reason);
+					});
+				} catch (error) {
+					const message = "Could not find a route location near this location.";
 
-								if (targetGeometry?.type === "point") {
-									const scale = Number.parseFloat(
-										import.meta.env.VITE_ZOOM_SCALE,
-									);
-									goToTarget2D = new Viewpoint({
-										scale,
-										targetGeometry: targetGeometry,
-									});
-								}
+					console.error(message, error);
 
-								await view.goTo(goToTarget2D, {
-									animate: false,
+					const handleError = (reason: unknown) => {
+						console.error("Failed to remove temporary graphic", reason);
+					};
+
+					view
+						.openPopup({
+							title: "Route Location Not Found",
+							content: message,
+							location: event.mapPoint,
+						})
+						.catch((reason: unknown) => {
+							console.error(`Popup with message "${message}" failed.`, {
+								reason,
+								event,
+							});
+						})
+						.finally(() => {
+							removeTempGraphic().catch(handleError);
+						});
+				}
+
+				/**
+				 * Removes the temporary graphic.
+				 * @returns - a promise that resolves when the graphic is removed.
+				 */
+				function removeTempGraphic() {
+					// Remove the temporary graphic
+					return tempLayer.applyEdits({
+						deleteFeatures: [tempGraphic],
+					});
+				}
+			};
+			view
+				.hitTest(event, {
+					include: [milepostPointLayer, milepostLineLayer],
+				})
+				.then(handleHitTestResult)
+				.catch((reason: unknown) => {
+					console.error("hitTest failed", reason);
+				});
+		};
+		view.on("click", handleViewOnClick);
+
+		// Set up the form for inputting SRMPdata.
+		import("./setupForm")
+			.then(({ setupForm }) => setupForm(view, milepostPointLayer))
+			.catch((reason: unknown) => {
+				console.error("failed to setup form", reason);
+			});
+
+		if (import.meta.env.DEV) {
+			(async (...layers: FeatureLayer[]) => {
+				await Promise.all(layers.map((l) => l.when()));
+				const { createExportButton } = await import("./widgets/ExportButton");
+				await createExportButton(layers);
+			})(milepostLineLayer, milepostPointLayer);
+		}
+
+		Promise.all([milepostPointLayer.when(), milepostLineLayer.when()]).then(
+			() => {
+				/**
+				 * Calls the ELC API to retrieve graphics from the URL and adds them to the milepost layer.
+				 * @returns A promise that resolves when the graphics have been added to the layer and the view has been updated.
+				 */
+				const callElc = async () => {
+					// Call the features from the URL and add them to the layer.
+					const addedFeatures = await callElcFromUrl(
+						milepostPointLayer,
+						milepostLineLayer,
+					);
+					if (addedFeatures) {
+						// Zoom to the first feature (if any are in the array).
+						// Only expecting to ever be a single feature present.
+						const feature = addedFeatures.at(0);
+						if (feature) {
+							const targetGeometry = feature?.geometry;
+
+							/**
+							 * The zoom target.
+							 *
+							 * Geometry Type           | Zoom Target
+							 * ------------------------|-----------------------------------
+							 * point                   | A viewpoint with a specified scale
+							 * polyline (or non-point) | The feature itself.
+							 */
+							let goToTarget2D: arcgisCoreGraphic | arcgisCoreViewpoint =
+								feature;
+
+							if (targetGeometry?.type === "point") {
+								const scale = Number.parseFloat(
+									import.meta.env.VITE_ZOOM_SCALE,
+								);
+								goToTarget2D = new Viewpoint({
+									scale,
+									targetGeometry: targetGeometry,
 								});
 							}
 
-							view
-								.openPopup({
-									features: addedFeatures,
-								})
-								.catch((reason: unknown) => {
-									console.error("Failed to open popup", reason);
-								});
+							await view.goTo(goToTarget2D, {
+								animate: false,
+							});
 						}
-					};
-					callElc().catch((reason: unknown) => {
-						emitErrorEvent(reason);
-					});
-				},
-			);
-		}
-	});
+
+						view
+							.openPopup({
+								features: addedFeatures,
+							})
+							.catch((reason: unknown) => {
+								console.error("Failed to open popup", reason);
+							});
+					}
+				};
+				callElc().catch((reason: unknown) => {
+					emitErrorEvent(reason);
+				});
+			},
+		);
+	}
+});
 
 (async () => {
 	const { setupSearch } = await import("./widgets/setupSearch.ts");

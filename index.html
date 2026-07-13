@@ -1,95 +1,55 @@
 <!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8">
-		<link rel="icon" type="image/svg+xml" href="/flying-t.svg">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<meta name="application-name" content="Locate MP">
-		<meta
-			name="description"
-			content="Locates mileposts along Washington State Routes, as defined by the Washington State Department of Transportation's Linear Referencing System."
-		>
-		<meta name="theme-color" content="#007b5f">
 
-		<link rel="stylesheet" href="/src/index.css">
-		<script
-			type="module"
-			src="https://js.arcgis.com/5.1.12/index.js"
-			integrity="sha512-cv9brVi45T4lA8EDI/xqpYg+40ubgWSwEroseij6XJ4Ndm5B61WZgEr1FeMDxXpzm5LGlY1KSDCoKgPUZEXsFw=="
-			crossorigin="anonymous"
-		></script>
+<head>
+	<meta charset="UTF-8">
+	<link rel="icon" type="image/svg+xml" href="/flying-t.svg">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="application-name" content="Locate MP">
+	<meta name="description"
+		content="Locates mileposts along Washington State Routes, as defined by the Washington State Department of Transportation's Linear Referencing System.">
+	<meta name="theme-color" content="#007b5f">
 
-		<title>%VITE_TITLE%</title>
-	</head>
+	<link rel="stylesheet" href="/src/index.css">
 
-	<body class="calcite-mode-auto">
-		<calcite-loader></calcite-loader>
-		<calcite-shell>
-			<wsdot-header slot="header">
-				<span slot="title">%VITE_HEADER_TITLE%</span>
-			</wsdot-header>
-			<calcite-shell-panel slot="panel-start" id="sidebar" resizable>
-				<calcite-panel id="route-input-form-panel">
-					<arcgis-search
-						reference-element="the-map"
-						include-default-sources-disabled
-					></arcgis-search>
-					<calcite-block
-						loading
-						id="route-input-form-block"
-						heading="Enter State Route & Milepost"
-						collapsible
-						expanded
-						icon-start="pin"
-					>
-						<form id="route-input-form" class="route-input-form">
-							<calcite-label for="routeInput"
-								>State Route
-								<calcite-combobox
-									id="routeInput"
-									name="route"
-									label="route select"
-									selection-mode="single"
-									selection-display="single"
-									overlay-positioning="fixed"
-									required
-									title="Select a route from the list. Type to filter the list."
-									placeholder="Select a route from the list. Type to filter the list."
-									allow-custom-values
-									data-url="https://data.wsdot.wa.gov/arcgis/rest/services/Shared/ElcRestSOE/MapServer/exts/ElcRestSoe/routes/"
-								> </calcite-combobox>
-							</calcite-label>
 
-							<calcite-label layout="inline" for="decreaseInput"
-								>Increase<calcite-switch
-									name="decrease"
-									id="decreaseInput"
-									title="Check this box if you want the decreasing route rather than increasing."
-								></calcite-switch>Decrease</calcite-label
-							>
+	<title>%VITE_TITLE%</title>
+</head>
 
-							<calcite-label for="mpInput"
-								>Milepost<calcite-input-number
-									title="Enter the milepost value here."
-									id="mpInput"
-									name="mp"
-									type="number"
-									min="0"
-									step="0.01"
-									required
-								/></calcite-label
-							>
+<body class="calcite-mode-auto">
+	<calcite-loader></calcite-loader>
+	<calcite-shell>
+		<wsdot-header slot="header">
+			<span slot="title">%VITE_HEADER_TITLE%</span>
+		</wsdot-header>
+		<calcite-shell-panel slot="panel-start" id="sidebar" resizable>
+			<calcite-panel id="route-input-form-panel">
+				<arcgis-search reference-element="the-map" include-default-sources-disabled></arcgis-search>
+				<calcite-block loading id="route-input-form-block" heading="Enter State Route & Milepost" collapsible
+					expanded icon-start="pin">
+					<form id="route-input-form" class="route-input-form">
+						<calcite-label for="routeInput">State Route
+							<calcite-combobox id="routeInput" name="route" label="route select" selection-mode="single"
+								selection-display="single" overlay-positioning="fixed" required
+								title="Select a route from the list. Type to filter the list."
+								placeholder="Select a route from the list. Type to filter the list." allow-custom-values
+								data-url="https://data.wsdot.wa.gov/arcgis/rest/services/Shared/ElcRestSOE/MapServer/exts/ElcRestSoe/routes/">
+							</calcite-combobox>
+						</calcite-label>
 
-							<calcite-label for="backInput" layout="inline"
-								>Ahead<calcite-switch
-									name="back"
-									id="backInput"
-									title="Check this box if the SRMP is back mileage."
-									label="Back"
-								></calcite-switch>Back</calcite-label
-							>
+						<calcite-label layout="inline" for="decreaseInput">Increase<calcite-switch name="decrease"
+								id="decreaseInput"
+								title="Check this box if you want the decreasing route rather than increasing."></calcite-switch>Decrease</calcite-label>
 
-							<!-- 
+						<calcite-label for="mpInput">Milepost<calcite-input-number
+								title="Enter the milepost value here." id="mpInput" name="mp" type="number" min="0"
+								step="0.01" required /></calcite-label>
+
+						<calcite-label for="backInput" layout="inline">Ahead<calcite-switch name="back" id="backInput"
+								title="Check this box if the SRMP is back mileage."
+								label="Back"></calcite-switch>Back</calcite-label>
+
+						<!-- 
             <calcite-block heading="End Milepost" description="End milepost (optional)" collapsible="true">
               <calcite-label for="endMPInput">End Milepost<calcite-input-number
                   title="Enter the end milepost value here if you want to search for a route segment." id="endMPInput"
@@ -100,209 +60,154 @@
             </calcite-block>
             -->
 
-							<div class="btn-container">
-								<calcite-button
-									type="submit"
-									title="Click this button to find this route + milepost and add a point to the map."
-									alignment="center"
-									width="full"
-									>Submit</calcite-button
-								>
-							</div>
-						</form>
-						<calcite-action
-							id="resetFormAction"
-							slot="actions-end"
-							icon="reset"
-							text="Reset form"
-							label="Reset form"
-						></calcite-action>
+						<div class="btn-container">
+							<calcite-button type="submit"
+								title="Click this button to find this route + milepost and add a point to the map."
+								alignment="center" width="full">Submit</calcite-button>
+						</div>
+					</form>
+					<calcite-action id="resetFormAction" slot="actions-end" icon="reset" text="Reset form"
+						label="Reset form"></calcite-action>
 
-						<calcite-tooltip
-							id="resetFormTooltip"
-							reference-element="resetFormAction"
-							>Click this button to clear the form input controls.</calcite-tooltip
-						>
-					</calcite-block>
-					<calcite-block heading="Layer List" collapsible icon-start="layers">
-						<arcgis-layer-list
-							id="layer-list"
-							show-errors
-							visibility-appearance="checkbox"
-							reference-element="the-map"
-						></arcgis-layer-list>
-					</calcite-block>
-					<calcite-block heading="Legend" collapsible icon-start="legend">
-						<arcgis-legend reference-element="the-map" />
-					</calcite-block>
-					<calcite-block heading="Basemaps" collapsible icon-start="basemap">
-						<arcgis-basemap-gallery
-							reference-element="the-map"
-						></arcgis-basemap-gallery>
-					</calcite-block>
-				</calcite-panel>
-			</calcite-shell-panel>
+					<calcite-tooltip id="resetFormTooltip" reference-element="resetFormAction">Click this button to
+						clear the form input controls.</calcite-tooltip>
+				</calcite-block>
+				<calcite-block heading="Layer List" collapsible icon-start="layers">
+					<arcgis-layer-list id="layer-list" show-errors visibility-appearance="checkbox"
+						reference-element="the-map"></arcgis-layer-list>
+				</calcite-block>
+				<calcite-block heading="Legend" collapsible icon-start="legend">
+					<arcgis-legend reference-element="the-map" />
+				</calcite-block>
+				<calcite-block heading="Basemaps" collapsible icon-start="basemap">
+					<arcgis-basemap-gallery reference-element="the-map"></arcgis-basemap-gallery>
+				</calcite-block>
+			</calcite-panel>
+		</calcite-shell-panel>
 
-			<!-- <div id="viewDiv"></div> -->
-			<!-- This is the map. It is set to be centered on WA. -->
-			<arcgis-map
-				id="the-map"
-				basemap="hybrid"
-				center="-120.85,47.295"
-				zoom="7"
-			>
-				<arcgis-popup slot="popup"></arcgis-popup>
+		<!-- <div id="viewDiv"></div> -->
+		<!-- This is the map. It is set to be centered on WA. -->
+		 <!-- <arcgis-map id="the-map" basemap="hybrid" center="-120.85,47.295" zoom="7"></arcgis-map> -->
+		<arcgis-map id="the-map" center="-120.85,47.295" zoom="7">
+			<arcgis-popup slot="popup"></arcgis-popup>
 
-				<!--
+			<!--
     Add map components.
     Small components (e.g., ones that are just single buttons) are placed
     directly on the map.
     Ones that are more complex are placed in an "arcgis-expand" component.
     -->
 
-				<!-- Top-leading -->
-				<arcgis-zoom slot="top-left"> </arcgis-zoom>
-				<arcgis-home slot="top-left"></arcgis-home>
-				<arcgis-locate slot="top-left"></arcgis-locate>
+			<!-- Top-leading -->
+			<arcgis-zoom slot="top-left"> </arcgis-zoom>
+			<arcgis-home slot="top-left"></arcgis-home>
+			<arcgis-locate slot="top-left"></arcgis-locate>
 
-				<!-- Top-right -->
-				<calcite-button
-					id="clear-button"
-					label="Clear all graphics"
-					slot="top-left"
-					icon-start="erase"
-					kind="neutral"
-				></calcite-button>
-				<calcite-button
-					slot="top-left"
-					id="screenshot-button"
-					icon-start="camera"
-					label="Take Screenshot"
-					kind="neutral"
-				> </calcite-button>
-				<calcite-button
-					id="exportButton"
-					label="Export graphics to GeoJSON"
-					icon-start="download"
-					slot="top-left"
-					kind="neutral"
-					hidden
-				></calcite-button>
-				<calcite-button
-					slot="top-left"
-					id="toggleSidebarButton"
-					label="Toggle Sidebar"
-					kind="neutral"
-				></calcite-button>
+			<!-- Top-right -->
+			<calcite-button id="clear-button" label="Clear all graphics" slot="top-left" icon-start="erase"
+				kind="neutral"></calcite-button>
+			<calcite-button slot="top-left" id="screenshot-button" icon-start="camera" label="Take Screenshot"
+				kind="neutral"> </calcite-button>
+			<calcite-button id="exportButton" label="Export graphics to GeoJSON" icon-start="download" slot="top-left"
+				kind="neutral" hidden></calcite-button>
+			<calcite-button slot="top-left" id="toggleSidebarButton" label="Toggle Sidebar"
+				kind="neutral"></calcite-button>
 
-				<!-- Bottom-left -->
-				<arcgis-scale-bar slot="bottom-left" unit="dual"></arcgis-scale-bar>
-			</arcgis-map>
-			<wsdot-footer slot="footer"></wsdot-footer>
-			<calcite-dialog
-				slot="dialogs"
-				id="disclaimer-dialog"
-				modal
-				kind="info"
-				placement="center"
-				heading="Disclaimer of warranties and limitations of liabilities"
-				description="Read our disclaimer before making use of information on this website."
-			>
-				<p>
-					By making use of any information on this website, you agree to the
-					following:
-				</p>
-
-				<p>
-					WSDOT endeavors to provide reliable information on this website.
-					However, the information is provided on an "as-is" and "as available"
-					basis and may include errors, omissions, or other inaccuracies.
-				</p>
-
-				<p>
-					You assume the sole risk of making use of the information contained on
-					this website. You are advised to not solely rely on the information on
-					this website for any reason.
-				</p>
-
-				<p>
-					No representations, warranties, and/or promises of any kind, expressed
-					or implied, are given as to the nature, standard, accuracy,
-					timeliness, completeness, reliability, legality, or otherwise of the
-					information provided in this website nor to the suitability or
-					otherwise of the information to your particular circumstances. WSDOT
-					expressly disclaims all warranties, express or implied, including,
-					without limitation, any warranty of merchantability, fitness for a
-					particular purpose, or non-infringement or any other implied warranty
-					under the uniform computer information transactions act as enacted by
-					any state. There are no warranties which extend beyond the description
-					hereof.
-				</p>
-
-				<p>
-					WSDOT cannot and will not guarantee that this website is free from
-					computer viruses or anything else that has destructive properties.
-				</p>
-
-				<p>
-					In no event shall WSDOT be liable for any indirect, punitive,
-					incidental, special, or consequential damages including, but not
-					limited to, loss of profits, loss of data, loss of business or other
-					loss arising out of or in any way connected with the use of (or
-					inability to use) this website or from your use of (or failure to use)
-					the information on this site, whether based in contract, negligence,
-					tort, strict liability, or otherwise, even if WSDOT has been advised
-					of the possibility of such damages.
-				</p>
-
-				<p>
-					This website provides links to other websites owned by third parties.
-					The content of such third party sites is not within
-					WSDOT&CloseCurlyQuote;s control, and we cannot and will not take
-					responsibility for the information or content thereon. Links to such
-					third party sites are not to be taken as an endorsement by WSDOT of
-					the third party site, or any information or products promoted, offered
-					or sold on the third party site, nor that such sites are free from
-					computer viruses or anything else that has destructive properties.
-					WSDOT cannot and does not take responsibility for the collection or
-					use of personal data from any third party site. In addition, WSDOT
-					will not accept responsibility for the accuracy, relevancy,
-					timeliness, or completeness of any information or advertising on these
-					third party websites.
-				</p>
-				<footer slot="footer">
-					&copy;
-					<abbr title="Washington State Department of Transportation"
-						>WSDOT</abbr
-					>
-					All Rights Reserved
-				</footer>
-			</calcite-dialog>
-			<calcite-alert
-				slot="alerts"
-				id="instructionsAlert"
-				icon="pin-plus"
-				kind="brand"
-				open="false"
-				auto-close
-				auto-close-duration="medium"
-				label="Instructions"
-				scale="l"
-			>
-				<div slot="title">Instructions</div>
-				<div slot="message">
-					Click on the map near a state route to add a point at the nearest
-					milepost.
-				</div>
-			</calcite-alert>
-		</calcite-shell>
-		<template id="no-webgl">
+			<!-- Bottom-left -->
+			<arcgis-scale-bar slot="bottom-left" unit="dual"></arcgis-scale-bar>
+		</arcgis-map>
+		<wsdot-footer slot="footer"></wsdot-footer>
+		<calcite-dialog slot="dialogs" id="disclaimer-dialog" modal kind="info" placement="center"
+			heading="Disclaimer of warranties and limitations of liabilities"
+			description="Read our disclaimer before making use of information on this website.">
 			<p>
-				This website requires
-				<a href="https://get.webgl.org/webgl2/">WebGL2</a>.
+				By making use of any information on this website, you agree to the
+				following:
 			</p>
-		</template>
 
-		<script type="module" src="/src/main.ts"></script>
-	</body>
+			<p>
+				WSDOT endeavors to provide reliable information on this website.
+				However, the information is provided on an "as-is" and "as available"
+				basis and may include errors, omissions, or other inaccuracies.
+			</p>
+
+			<p>
+				You assume the sole risk of making use of the information contained on
+				this website. You are advised to not solely rely on the information on
+				this website for any reason.
+			</p>
+
+			<p>
+				No representations, warranties, and/or promises of any kind, expressed
+				or implied, are given as to the nature, standard, accuracy,
+				timeliness, completeness, reliability, legality, or otherwise of the
+				information provided in this website nor to the suitability or
+				otherwise of the information to your particular circumstances. WSDOT
+				expressly disclaims all warranties, express or implied, including,
+				without limitation, any warranty of merchantability, fitness for a
+				particular purpose, or non-infringement or any other implied warranty
+				under the uniform computer information transactions act as enacted by
+				any state. There are no warranties which extend beyond the description
+				hereof.
+			</p>
+
+			<p>
+				WSDOT cannot and will not guarantee that this website is free from
+				computer viruses or anything else that has destructive properties.
+			</p>
+
+			<p>
+				In no event shall WSDOT be liable for any indirect, punitive,
+				incidental, special, or consequential damages including, but not
+				limited to, loss of profits, loss of data, loss of business or other
+				loss arising out of or in any way connected with the use of (or
+				inability to use) this website or from your use of (or failure to use)
+				the information on this site, whether based in contract, negligence,
+				tort, strict liability, or otherwise, even if WSDOT has been advised
+				of the possibility of such damages.
+			</p>
+
+			<p>
+				This website provides links to other websites owned by third parties.
+				The content of such third party sites is not within
+				WSDOT&CloseCurlyQuote;s control, and we cannot and will not take
+				responsibility for the information or content thereon. Links to such
+				third party sites are not to be taken as an endorsement by WSDOT of
+				the third party site, or any information or products promoted, offered
+				or sold on the third party site, nor that such sites are free from
+				computer viruses or anything else that has destructive properties.
+				WSDOT cannot and does not take responsibility for the collection or
+				use of personal data from any third party site. In addition, WSDOT
+				will not accept responsibility for the accuracy, relevancy,
+				timeliness, or completeness of any information or advertising on these
+				third party websites.
+			</p>
+			<footer slot="footer">
+				&copy;
+				<abbr title="Washington State Department of Transportation">WSDOT</abbr>
+				All Rights Reserved
+			</footer>
+		</calcite-dialog>
+		<calcite-alert slot="alerts" id="instructionsAlert" icon="pin-plus" kind="brand" open="false" auto-close
+			auto-close-duration="medium" label="Instructions" scale="l">
+			<div slot="title">Instructions</div>
+			<div slot="message">
+				Click on the map near a state route to add a point at the nearest
+				milepost.
+			</div>
+		</calcite-alert>
+	</calcite-shell>
+	<template id="no-webgl">
+		<p>
+			This website requires
+			<a href="https://get.webgl.org/webgl2/">WebGL2</a>.
+		</p>
+	</template>
+
+	<script type="module" src="https://js.arcgis.com/5.1.12/index.js"
+		integrity="sha512-cv9brVi45T4lA8EDI/xqpYg+40ubgWSwEroseij6XJ4Ndm5B61WZgEr1FeMDxXpzm5LGlY1KSDCoKgPUZEXsFw=="
+		crossorigin="anonymous"></script>
+	<script type="module" src="/src/main.ts"></script>
+</body>
+
 </html>
