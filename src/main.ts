@@ -30,13 +30,14 @@ import { setupSidebarCollapseButton } from "./widgets/CollapseButton";
 
 import("./urls/isIntranet.ts");
 
-const [{ whenOnce }, Graphic, Polyline, Viewpoint, config] =
+const [{ whenOnce }, Graphic, Polyline, Viewpoint, config, GroupLayer] =
 	await $arcgis.import([
 		"@arcgis/core/core/reactiveUtils",
 		"@arcgis/core/Graphic",
 		"@arcgis/core/geometry/Polyline",
 		"@arcgis/core/Viewpoint",
 		"@arcgis/core/config",
+		"@arcgis/core/layers/GroupLayer"
 	] as const);
 
 let analytics: AnalyticsInstance | null = null;
@@ -54,7 +55,7 @@ const arcgisMapElement = document.querySelector("arcgis-map");
 	if (!arcgisMapElement) {
 		throw new TypeError("Could not find map element");
 	}
-	
+
 	// const itemId = "todo-id-from-url-search-param";
 	// const WebMap = await $arcgis.import("@arcgis/core/WebMap.js");
 	// const map = new WebMap({
@@ -351,6 +352,15 @@ arcgisMapElement?.addEventListener("arcgisViewReadyChange", (event) => {
 			waExtent.spatialReference,
 		);
 
+		const mpGroupLayer = new GroupLayer({
+			id: "milepost-group",
+			title: "Mileposts",
+			layers: [
+				milepostPointLayer,
+				milepostLineLayer
+			]
+		})
+
 		// Show the instructions alert once the mileposts layer has been loaded.
 		milepostPointLayer.on("layerview-create", () => {
 			const alert =
@@ -364,8 +374,7 @@ arcgisMapElement?.addEventListener("arcgisViewReadyChange", (event) => {
 		});
 
 		map?.addMany([
-			milepostPointLayer,
-			milepostLineLayer,
+			mpGroupLayer,
 			createParcelsGroupLayer(),
 		]);
 
