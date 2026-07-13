@@ -37,7 +37,7 @@ const [{ whenOnce }, Graphic, Polyline, Viewpoint, config, GroupLayer] =
 		"@arcgis/core/geometry/Polyline",
 		"@arcgis/core/Viewpoint",
 		"@arcgis/core/config",
-		"@arcgis/core/layers/GroupLayer"
+		"@arcgis/core/layers/GroupLayer",
 	] as const);
 
 let analytics: AnalyticsInstance | null = null;
@@ -56,30 +56,44 @@ const arcgisMapElement = document.querySelector("arcgis-map");
 		throw new TypeError("Could not find map element");
 	}
 
-	// const itemId = "todo-id-from-url-search-param";
-	// const WebMap = await $arcgis.import("@arcgis/core/WebMap.js");
-	// const map = new WebMap({
-	// 	portalItem: {
-	// 		id: itemId
-	// 	}
-	// });
-
+	const WebMap = await $arcgis.import("@arcgis/core/WebMap.js");
 	const EsriMap = await $arcgis.import("@arcgis/core/Map.js");
-	const map = new EsriMap({
-		basemap: {
-			portalItem: {
-				id: "952d28d8d68c4e9ca2db7c7d68307af0"
+
+	function getWebmapId() {
+		const hash = location.hash.slice(1);
+		const params = new URLSearchParams(hash);
+		let webmapId: string | null = null;
+
+		for (const [key, value] of params.entries()) {
+			if (key.toLocaleLowerCase() === "webmap") {
+				webmapId = value;
 			}
-		},
-	})
+		}
 
-	arcgisMapElement.map = map;
+		return webmapId;
+	}
 
-	// const EsriMap = await $arcgis.import("@arcgis/core/Map.js");
+	const webmapId = getWebmapId();
 
-	// const map = new EsriMap({
-		
-	// })
+	if (webmapId) {
+		const map = new WebMap({
+			portalItem: {
+				id: webmapId,
+			},
+		});
+		arcgisMapElement.map = map;
+	} else {
+		// TODO: setup basemaps
+		const map = new EsriMap({
+			basemap: {
+				portalItem: {
+					id: "952d28d8d68c4e9ca2db7c7d68307af0",
+				},
+			},
+		});
+
+		arcgisMapElement.map = map;
+	}
 })();
 
 arcgisMapElement?.addEventListener("arcgisViewReadyChange", (event) => {
@@ -88,9 +102,6 @@ arcgisMapElement?.addEventListener("arcgisViewReadyChange", (event) => {
 	 * from the `event.detail` object.
 	 */
 	const { map, view } = event.target;
-	// Add more functionality here.
-
-	/* __PURE__ */ console.log("Map loaded", map);
 
 	function convertToClassName(environment: HostEnvironment) {
 		return environment.replaceAll(/\s/g, "_").toLowerCase();
@@ -355,11 +366,8 @@ arcgisMapElement?.addEventListener("arcgisViewReadyChange", (event) => {
 		const mpGroupLayer = new GroupLayer({
 			id: "milepost-group",
 			title: "Mileposts",
-			layers: [
-				milepostPointLayer,
-				milepostLineLayer
-			]
-		})
+			layers: [milepostPointLayer, milepostLineLayer],
+		});
 
 		// Show the instructions alert once the mileposts layer has been loaded.
 		milepostPointLayer.on("layerview-create", () => {
@@ -373,10 +381,7 @@ arcgisMapElement?.addEventListener("arcgisViewReadyChange", (event) => {
 			setupMPUrlParamsUpdate(view);
 		});
 
-		map?.addMany([
-			mpGroupLayer,
-			createParcelsGroupLayer(),
-		]);
+		map?.addMany([mpGroupLayer, createParcelsGroupLayer()]);
 
 		import("./widgets/ScreenshotButton").then(({ setupScreenshotButton }) => {
 			setupScreenshotButton(view);
