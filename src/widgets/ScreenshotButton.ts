@@ -1,4 +1,5 @@
 import type MapView from "@arcgis/core/views/MapView";
+import { Action } from "@esri/calcite-components/components/calcite-action";
 
 /**
  * Creates the controls for the screenshot button.
@@ -122,8 +123,8 @@ const createDialog = (view: MapView) => {
 export async function setupScreenshotButton(mapView: MapView) {
 	await mapView.when();
 
-	const screenshotButton = document.querySelector<HTMLCalciteButtonElement>(
-		"calcite-button#screenshot-button",
+	const screenshotButton = document.querySelector<Action>(
+		"#screenshot-button",
 	);
 	if (!screenshotButton) {
 		throw new TypeError("Screenshot button not found");

@@ -6,10 +6,13 @@ import type MapView from "@arcgis/core/views/MapView";
  * @returns - The handle for watching the view's updating property.
  */
 export async function setupViewLoadingIndicator(view: MapView) {
-	const viewProgress = document.createElement("progress");
-	viewProgress.textContent = "Updating map...";
-	// Add the map loading indicator.
-	view.ui.add(viewProgress, "bottom-trailing");
+	const viewProgress = document.querySelector<HTMLCalciteProgressElement>(
+		"#map-update-progress",
+	);
+
+	if (viewProgress == null) {
+		throw new Error("Could not find the map progress element.")
+	}
 
 	const { watch } = await $arcgis.import("@arcgis/core/core/reactiveUtils.js");
 

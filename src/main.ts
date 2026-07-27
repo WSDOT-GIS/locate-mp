@@ -1,13 +1,13 @@
-import type MapView from "@arcgis/core/views/MapView";
-import "@wsdot/web-styles/css/wsdot-colors.css";
 import type arcgisCoreGraphic from "@arcgis/core/Graphic";
 import type FeatureLayer from "@arcgis/core/layers/FeatureLayer";
 import type arcgisCoreViewpoint from "@arcgis/core/Viewpoint";
 import type { ClickEvent } from "@arcgis/core/views/input/types";
+import type MapView from "@arcgis/core/views/MapView";
 import type {
-	SceneViewGraphicHit,
-	ViewHitTestResult,
+    SceneViewGraphicHit,
+    ViewHitTestResult,
 } from "@arcgis/core/views/types";
+import "@wsdot/web-styles/css/wsdot-colors.css";
 import type { AnalyticsInstance } from "analytics";
 import { addGraphicsToLayer } from "./addGraphicsToLayer";
 import { createErrorAlert } from "./createElcErrorAlert";
@@ -17,8 +17,8 @@ import { callElcFromUrl } from "./elc/url";
 import { emitErrorEvent } from "./errorEvent";
 import type { HostEnvironment } from "./getHostEnvironment";
 import {
-	setupMPUrlParamsUpdate,
-	updateUrlSearchParams,
+    setupMPUrlParamsUpdate,
+    updateUrlSearchParams,
 } from "./history-api/url-search";
 import { createMilepostLineLayer } from "./layers/MilepostLayer/milepost-line-layer";
 import { createMilepostPointLayer } from "./layers/MilepostLayer/milepost-point-layer";
@@ -27,6 +27,9 @@ import { tempLayer } from "./layers/TempLayer";
 import { hasXAndY, isGraphicHit } from "./types";
 import waExtent from "./WAExtent";
 import { setupSidebarCollapseButton } from "./widgets/CollapseButton";
+
+import("./components/wsdot-footer");
+import("./components/wsdot-header");
 
 import("./urls/isIntranet.ts");
 
@@ -241,10 +244,8 @@ arcgisMapElement?.addEventListener("arcgisViewReadyChange", (event) => {
 	}
 
 	function testWebGL2Support() {
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 		if (window.WebGL2RenderingContext) {
 			return true;
-			// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 		}
 		if (window.WebGLRenderingContext && !window.WebGL2RenderingContext) {
 			console.error(

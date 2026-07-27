@@ -48,7 +48,7 @@
 		"editor.defaultFormatter": "biomejs.biome"
 	},
 	"[html]": {
-		"editor.defaultFormatter": "vscode.html-language-features"
+		"editor.defaultFormatter": "biomejs.biome"
 	},
 	"files.associations": {
 		"*.{lxp,arcade}": "javascript"

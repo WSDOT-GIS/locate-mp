@@ -1,7 +1,9 @@
-.calcite-mode-auto,
-.calcite-mode-light,
-.calcite-mode-dark {
+body {
 	--calcite-color-brand: var(--wsdot-logo-green);
+}
+calcite-navigation {
+	--calcite-navigation-background-color: var(--calcite-color-brand);
+	--calcite-navigation-logo-heading-text-color: white;
 }
 
 arcgis-map {
