@@ -30,7 +30,7 @@
 		"@fontsource/overpass": "^5.2.8",
 		"@terraformer/arcgis": "^2.2.2",
 		"@types/geojson": "^7946.0.16",
-		"@types/jsdom": "^28.0.3",
+		"@types/jsdom": "^30.0.0",
 		"@wsdot/land-use-codes": "github:WSDOT-GIS/land-use",
 		"@wsdot/web-styles": "github:WSDOT-GIS/wsdot-web-styles#v1.0.1",
 		"analytics": "^0.8.19",
@@ -39,7 +39,7 @@
 		"wsdot-route-utils": "^3.0.0"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "2.5.3",
+		"@biomejs/biome": "2.5.7",
 		"@types/arcgis-rest-api": "^10.4.8",
 		"@types/browser-update": "^3.3.3",
 		"@types/bun": "latest",
@@ -49,7 +49,7 @@
 		"@vitest/coverage-v8": "^4.1.10",
 		"@wsdot/arcgis-core-helper": "^1.1.2",
 		"cspell": "^10.0.1",
-		"jsdom": "^29.1.1",
+		"jsdom": "^30.0.1",
 		"msw": "^2.15.0",
 		"optionator": "^0.9.4",
 		"svgo": "^4.0.2",
