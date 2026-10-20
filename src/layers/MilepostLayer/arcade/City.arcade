@@ -3,11 +3,11 @@
  */
 
 // The ArcGIS Online item ID for the City Limits service.
-var agolId = "0d96ba84b802425aa1d2b9a99e422c5d";
+var agolId = "bb7c67c334be494c88cf00ebb91fe51f";
 // The portal URL for that service.
 var p = Portal("https://wsdot.maps.arcgis.com");
 // The ID of the layer within that service.
-var layerId = 1;
+var layerId = 2;
 
 // Specify the fields that we are interested in.
 var fields = ["CityName", "LastUpdate"];
@@ -19,7 +19,9 @@ rather than storing each result in a variable.
 var cityFeatures = Intersects(
   $feature,
   FeatureSetByPortalItem(
-    p, agolId, layerId, fields, false
+    p, agolId, 
+    layerId, 
+    fields, false
   )
 );
 
@@ -38,18 +40,20 @@ function formatFeature(cityFeature) {
   return output;
 }
 
+var output = null;
+
 if (featureCount == 1) {
   var cityFeature = First(cityFeatures);
-  return formatFeature(cityFeature);
-}
+  output = formatFeature(cityFeature);
+} else {
 
-var output = {}
+  output = {}
 
-
-for (var f in cityFeatures) {
-  var cityName = f.CityName;
-  var lastUpdate = IIf(!IsEmpty(f.LastUpdate), DateOnly(f.LastUpdate), f.LastUpdate);
-  output[cityName] = lastUpdate;
+  for (var f in cityFeatures) {
+    var cityName = f.CityName;
+    var lastUpdate = IIf(!IsEmpty(f.LastUpdate), DateOnly(f.LastUpdate), f.LastUpdate);
+    output[cityName] = lastUpdate;
+  }
 }
 
 return output;

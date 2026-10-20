@@ -13,7 +13,7 @@
 
 		<script
 			type="module"
-			src="https://js.arcgis.com/5.1.14/index.js"
+			src="https://js.arcgis.com/5.1.27/index.js"
 			integrity="sha512-cv9brVi45T4lA8EDI/xqpYg+40ubgWSwEroseij6XJ4Ndm5B61WZgEr1FeMDxXpzm5LGlY1KSDCoKgPUZEXsFw=="
 			crossorigin="anonymous"
 		></script>
@@ -26,7 +26,8 @@
 		<calcite-loader></calcite-loader>
 		<calcite-shell>
 			<calcite-navigation slot="header" scale="l">
-				<calcite-navigation-logo class="wsdot-logo"
+				<calcite-navigation-logo
+					class="wsdot-logo"
 					slot="logo"
 					heading="%VITE_HEADER_TITLE%"
 					href="https://wsdot.wa.gov"
@@ -35,11 +36,7 @@
 				> </calcite-navigation-logo>
 			</calcite-navigation>
 
-			<calcite-shell-panel
-				slot="panel-start"
-				id="sidebar"
-				resizable
-			>
+			<calcite-shell-panel slot="panel-start" id="sidebar" resizable>
 				<calcite-action-bar slot="action-bar">
 					<calcite-action-group>
 						<calcite-action
@@ -106,7 +103,8 @@
 									name="decrease"
 									id="decreaseInput"
 									title="Check this box if you want the decreasing route rather than increasing."
-								></calcite-switch>Decrease</calcite-label
+								></calcite-switch
+								>Decrease</calcite-label
 							>
 
 							<calcite-label for="mpInput"
@@ -127,7 +125,8 @@
 									id="backInput"
 									title="Check this box if the SRMP is back mileage."
 									label="Back"
-								></calcite-switch>Back</calcite-label
+								></calcite-switch
+								>Back</calcite-label
 							>
 
 							<!-- 
@@ -162,7 +161,8 @@
 						<calcite-tooltip
 							id="resetFormTooltip"
 							reference-element="resetFormAction"
-							>Click this button to clear the form input controls.</calcite-tooltip
+							>Click this button to clear the form input
+							controls.</calcite-tooltip
 						>
 					</calcite-block>
 					<calcite-block heading="Layer List" collapsible icon-start="layers">
@@ -269,18 +269,18 @@
 
 				<p>
 					This website provides links to other websites owned by third parties.
-					The content of such third party sites is not within
-					WSDOT&apos;s control, and we cannot and will not take
-					responsibility for the information or content thereon. Links to such
-					third party sites are not to be taken as an endorsement by WSDOT of
-					the third party site, or any information or products promoted, offered
-					or sold on the third party site, nor that such sites are free from
-					computer viruses or anything else that has destructive properties.
-					WSDOT cannot and does not take responsibility for the collection or
-					use of personal data from any third party site. In addition, WSDOT
-					will not accept responsibility for the accuracy, relevancy,
-					timeliness, or completeness of any information or advertising on these
-					third party websites.
+					The content of such third party sites is not within WSDOT&apos;s
+					control, and we cannot and will not take responsibility for the
+					information or content thereon. Links to such third party sites are
+					not to be taken as an endorsement by WSDOT of the third party site, or
+					any information or products promoted, offered or sold on the third
+					party site, nor that such sites are free from computer viruses or
+					anything else that has destructive properties. WSDOT cannot and does
+					not take responsibility for the collection or use of personal data
+					from any third party site. In addition, WSDOT will not accept
+					responsibility for the accuracy, relevancy, timeliness, or
+					completeness of any information or advertising on these third party
+					websites.
 				</p>
 				<footer slot="footer">
 					&copy;
